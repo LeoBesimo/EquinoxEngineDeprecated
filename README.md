@@ -1,2 +1,2 @@
 # EquinoxEngine
-2D Game Framework with Physics Engine
+2D Game Framework with Custom Physics Engine
