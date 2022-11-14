@@ -7,17 +7,20 @@ equinoxAppEntryPoint
 
 	eq::Game::setWindowProperties(L"Test Window", 1280,720);
 
-	//game update
-	float x = 200, y = 200;
-	float speed = 100;
+	eq::Physics::BoxShape shape(eq::Math::Vector2(400, 400), 0.f, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(20, 0, 0, 20));
+	shape.setOmega(eq::Math::HALF_PI);
+
+	eq::Physics::PolygonShape poly(eq::Math::Vector2(600, 400), 0.f, 7, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(40, 0, 0, 40));
+	poly.setOmega(-eq::Math::QUARTER_PI);
+
+	eq::Physics::CircleShape circle(eq::Math::Vector2(400, 200), 0.f, 30, eq::Physics::Materials::SUPERBALL);
+	circle.setVelocity(eq::Math::Vector2(30, 0));
+	circle.setOmega(eq::Math::PI);
 
 	eq::Game::setGameUpdate([&](float delta)
 	{
-		wchar_t charBuffer[256];
+		/*wchar_t charBuffer[256];
 		swprintf(charBuffer, 256, L"Framerate: %f\n", 1/delta);
-		OutputDebugString(charBuffer);
-
-		/*swprintf(charBuffer, 256, L"Delta: %f\n", 1 / delta);
 		OutputDebugString(charBuffer);*/
 
 		static int frames = 0;
@@ -28,34 +31,32 @@ equinoxAppEntryPoint
 
 		if (timePassed >= 1.0f)
 		{
-			swprintf(charBuffer, 256, L"FPS: %d\n", frames);
+			/*swprintf(charBuffer, 256, L"FPS: %d\n", frames);*/
 			//OutputDebugString(charBuffer);
 
 			frames = 0;
 			timePassed -= 1.0f;
+
+
 		}
 
-		if (eq::Input::isKeyPressed(EQ_W)) y -= speed * delta;
-		if (eq::Input::isKeyPressed(EQ_S)) y += speed * delta;
-		if (eq::Input::isKeyPressed(EQ_A)) x -= speed * delta;
-		if (eq::Input::isKeyPressed(EQ_D)) x += speed * delta;
+		eq::Input::Position mouse = eq::Input::getMousePosition();
+		//shape.setPosition(eq::Math::Vector2(mouse.x, mouse.y));
 
-		if (eq::Input::wasKeyHit(EQ_E)) speed = 200;
-		if (eq::Input::wasKeyHit(EQ_Q)) speed = 100;
+		//eq::Renderer::DrawLine(eq::Game::getWindowWidth() / 2, eq::Game::getWindowHeight() / 2, mouse.x, mouse.y, eq::Color(255, 0, 0));
+		poly.update(delta);
+		poly.render();
 
-		eq::Renderer::DrawRectangle(eq::Rect(x,y,200,200), { 255,255,0 });
+		shape.update(delta);
+		shape.render();
 
-		eq::Input::Position mousePos = eq::Input::getMousePosition();
-
-		eq::Renderer::DrawTriangle(200, 200, 350, 350, mousePos.x, mousePos.y, { 0,255,0 });
-
-		swprintf(charBuffer, 256, L"%d : %d\n", mousePos.x, mousePos.y);
-		//OutputDebugString(charBuffer);
+		circle.update(delta);
+		circle.render();
 		
 	}
 	);
 
-	eq::Renderer::setClearColor({ 200,120,20 });
+	eq::Renderer::setClearColor(eq::Color(56,56,56));
 
 	eq::Game::start();
 	//game destroy

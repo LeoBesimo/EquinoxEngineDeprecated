@@ -142,6 +142,11 @@
   <ItemGroup>
     <ClCompile Include="src\Equinox\Game.cpp" />
     <ClCompile Include="src\Equinox\Input.cpp" />
+    <ClCompile Include="src\Equinox\Math\eqMath.cpp" />
+    <ClCompile Include="src\Equinox\Physics\Shapes\BoxShape.cpp" />
+    <ClCompile Include="src\Equinox\Physics\Shapes\CircleShape.cpp" />
+    <ClCompile Include="src\Equinox\Physics\Shapes\PolygonShape.cpp" />
+    <ClCompile Include="src\Equinox\Physics\Shapes\Shape.cpp" />
     <ClCompile Include="src\Equinox\Renderer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -150,9 +155,21 @@
     <ClInclude Include="src\Equinox\Game.h" />
     <ClInclude Include="src\Equinox\Input.h" />
     <ClInclude Include="src\Equinox\Math\eqMath.h" />
+    <ClInclude Include="src\Equinox\Math\Matrix2x2.h" />
+    <ClInclude Include="src\Equinox\Math\Vector2.h" />
+    <ClInclude Include="src\Equinox\Math\Vector3.h" />
+    <ClInclude Include="src\Equinox\Math\Vector4.h" />
     <ClInclude Include="src\Equinox\Physics\eqPhysics.h" />
     <ClInclude Include="src\Equinox\Physics\PhysicsWorld.h" />
+    <ClInclude Include="src\Equinox\Physics\Shapes\BoxShape.h" />
+    <ClInclude Include="src\Equinox\Physics\Shapes\CircleShape.h" />
+    <ClInclude Include="src\Equinox\Physics\Shapes\Materials.h" />
+    <ClInclude Include="src\Equinox\Physics\Shapes\PolygonShape.h" />
+    <ClInclude Include="src\Equinox\Physics\Shapes\Shape.h" />
     <ClInclude Include="src\Equinox\Renderer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

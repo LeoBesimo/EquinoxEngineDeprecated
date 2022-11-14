@@ -2,22 +2,28 @@
 
 namespace eq
 {
-	void Renderer::SetPixel(int x, int y, const RGBColor& color)
+	float Renderer::alphaScaler;
+
+	void Renderer::SetPixel(int x, int y, const Color& color)
 	{
 		BitmapBuffer& buffer = getInstance().buffer;
 
 		if (x < 0 || x > buffer.width || y < 0 || y > buffer.height)
 			return;
 
-		uint32_t rawColor = (color.red << 16) | (color.green << 8) | (color.blue << 0);
-
 		uint8_t* row = (uint8_t*)buffer.memory + x * bytesPerPixel + y * buffer.pitch;
 		uint32_t* pixel = (uint32_t*)row;
+
+		//Color pixelColor = ColorFromUInt(*pixel);
+
+		//uint32_t rawColor = BlendColor(color, *pixel); // = (color.red << 16) | (color.green << 8) | (color.blue << 0);
+
+		uint32_t rawColor = (color.red << 16) | (color.green << 8) | (color.blue << 0);
 		*pixel = rawColor;
 
 	}
 
-	void Renderer::FillRectangle(const Rect& rect, const RGBColor& color)
+	void Renderer::FillRectangle(const Rect& rect, const Color& color)
 	{
 		BitmapBuffer& buffer = getInstance().buffer;
 
@@ -39,13 +45,15 @@ namespace eq
 			uint32_t* pixel = (uint32_t*)row;
 			for (int x = minX; x < maxX; x++)
 			{
+				//Color pixelColor = ColorFromUInt(*pixel);
+				//uint32_t rawColor = BlendColor(color, *pixel);
 				*pixel++ = rawColor;
 			}
 			row += buffer.pitch;
 		}
 	}
 
-	void Renderer::DrawRectangle(const Rect& rect, const RGBColor& color)
+	void Renderer::DrawRectangle(const Rect& rect, const Color& color)
 	{
 		BitmapBuffer& buffer = getInstance().buffer;
 
@@ -70,7 +78,7 @@ namespace eq
 		}
 	}
 
-	void Renderer::DrawLine(int x0, int y0, int x1, int y1, const RGBColor& color)
+	void Renderer::DrawLine(int x0, int y0, int x1, int y1, const Color& color)
 	{
 		if (abs(y1 - y0) < abs(x1 - x0))
 		{
@@ -82,13 +90,18 @@ namespace eq
 		else
 		{
 			if (y0 > y1)
-				plotLineHigh(x1, y1, x0, x0, color);
+				plotLineHigh(x1, y1, x0, y0, color);
 			else
 				plotLineHigh(x0, y0, x1, y1, color);
 		}
 	}
 
-	void Renderer::FillCircle(int originX, int originY, int radius, const RGBColor& color)
+	void Renderer::DrawLine(Math::Vector2 a, Math::Vector2 b, const Color& color)
+	{
+		DrawLine(int(a.x + 0.5f), int(a.y + 0.5f), int(b.x + 0.5f), int(b.y + 0.5f) ,color);
+	}
+
+	void Renderer::FillCircle(int originX, int originY, int radius, const Color& color)
 	{
 		for (int y = -radius; y <= radius; y++)
 			for (int x = -radius; x <= radius; x++)
@@ -96,7 +109,7 @@ namespace eq
 					SetPixel(originX + x, originY + y, color);
 	}
 
-	void Renderer::FillEllipse(int originX, int originY, int radiusX, int radiusY, const RGBColor& color)
+	void Renderer::FillEllipse(int originX, int originY, int radiusX, int radiusY, const Color& color)
 	{
 		for (int y = -radiusY; y <= radiusY; y++)
 			for (int x = -radiusX; x <= radiusX; x++)
@@ -104,7 +117,7 @@ namespace eq
 					SetPixel(originX + x, originY + y, color);
 	}
 
-	void Renderer::DrawCircle(int originX, int originY, int radius, const RGBColor& color)
+	void Renderer::DrawCircle(int originX, int originY, int radius, const Color& color)
 	{
 		for (int y = -radius; y <= radius; y++)
 			for (int x = -radius; x <= radius; x++)
@@ -112,7 +125,12 @@ namespace eq
 					SetPixel(originX + x, originY + y, color);
 	}
 
-	void Renderer::DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, const RGBColor& color)
+	void Renderer::DrawCircle(Math::Vector2 position, int radius, const Color& color)
+	{
+		DrawCircle(int(position.x + 0.5), int(position.y + 0.5), radius, color);
+	}
+
+	void Renderer::DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, const Color& color)
 	{
 		DrawLine(x0, y0, x1, y1, color);
 		DrawLine(x0, y0, x2, y2, color);
@@ -173,7 +191,7 @@ namespace eq
 		FillRectangle(Rect(0,0,float(buffer.width),float(buffer.height)), getInstance().clearColor);
 	}
 
-	void Renderer::plotLineLow(int x0, int y0, int x1, int y1, const RGBColor& color)
+	void Renderer::plotLineLow(int x0, int y0, int x1, int y1, const Color& color)
 	{
 		int dx = x1 - x0;
 		int dy = y1 - y0;
@@ -202,7 +220,7 @@ namespace eq
 		}
 	}
 
-	void Renderer::plotLineHigh(int x0, int y0, int x1, int y1, const RGBColor& color)
+	void Renderer::plotLineHigh(int x0, int y0, int x1, int y1, const Color& color)
 	{
 		int dx = x1 - x0;
 		int dy = y1 - y0;
@@ -228,6 +246,40 @@ namespace eq
 				D = D + 2 * dx;
 			}
 		}
+	}
 
+	Color Renderer::ColorFromUInt(uint32_t color)
+	{
+		uint8_t r = (uint8_t)color >> 16;
+		uint8_t g = (uint8_t)color >> 8;
+		uint8_t b = (uint8_t)color >> 0;
+		return Color(r, g, b);
+	}
+
+	uint32_t Renderer::UIntFromColor(Color color)
+	{
+		return (color.red << 16) | (color.green << 8) | color.blue;
+	}
+
+	uint32_t Renderer::BlendColor(Color original, Color background)
+	{
+		float opacity = original.alpha;
+		uint8_t newRed = opacity * original.red + (1 - opacity) * background.red;
+		uint8_t newGreen = opacity * original.green + (1 - opacity) * background.green;
+		uint8_t newBlue = opacity * original.blue + (1 - opacity) * background.blue;
+
+		return (newRed << 16) | (newGreen << 8) | newBlue;
+	}
+
+	uint32_t Renderer::BlendColor(Color original, uint32_t background)
+	{
+		float opacity = original.alpha;
+		/*uint8_t newRed = (opacity * original.red + (1 - opacity) * (uint8_t) (background >> 16));
+		uint8_t newGreen = (opacity * original.green + (1 - opacity) * (uint8_t) (background >> 8));
+		uint8_t newBlue = opacity * original.blue + (1 - opacity) * (uint8_t) (background);*/
+
+		return ((uint8_t)(opacity * original.red + (1 - opacity) * (uint8_t)(background >> 16)) << 16) |
+			   ((uint8_t)(opacity * original.green + (1 - opacity) * (uint8_t)(background >> 8)) << 8) | 
+			   ((uint8_t)(opacity * original.blue + (1 - opacity) * (uint8_t)(background)));
 	}
 }
