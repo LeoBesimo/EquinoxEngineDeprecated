@@ -149,6 +149,9 @@
     <ClInclude Include="src\Equinox\Equinox.h" />
     <ClInclude Include="src\Equinox\Game.h" />
     <ClInclude Include="src\Equinox\Input.h" />
+    <ClInclude Include="src\Equinox\Math\eqMath.h" />
+    <ClInclude Include="src\Equinox\Physics\eqPhysics.h" />
+    <ClInclude Include="src\Equinox\Physics\PhysicsWorld.h" />
     <ClInclude Include="src\Equinox\Renderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

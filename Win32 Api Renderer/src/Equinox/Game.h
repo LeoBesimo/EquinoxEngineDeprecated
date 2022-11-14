@@ -12,7 +12,6 @@ namespace eq
 {
 	class Game
 	{
-
 		friend LRESULT CALLBACK WindowCallback(
 			HWND windowHandle,
 			UINT message,
@@ -30,6 +29,8 @@ namespace eq
 		int windowHeight;
 
 		std::function<void(float delta)> update;
+
+		float secondsPerFrame = 1.f / 60.f;
 
 	public:
 		Game();

@@ -138,12 +138,15 @@ namespace eq
 			{
 
 				LARGE_INTEGER currentCounter;
+				float delta = 0;
+				while(delta < secondsPerFrame)
+				{
 				QueryPerformanceCounter(&currentCounter);
 
 				int64_t counterElapsed = currentCounter.QuadPart - lastCounter.QuadPart;
 
-				float delta = (float)counterElapsed / (float)cpuFrequency.QuadPart;
-
+				delta = (float)counterElapsed / (float)cpuFrequency.QuadPart;
+				}
 				lastCounter = currentCounter;
 
 				MSG message;
