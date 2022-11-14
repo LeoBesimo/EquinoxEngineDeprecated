@@ -8,7 +8,8 @@ equinoxAppEntryPoint
 	eq::Game::setWindowProperties(L"Test Window", 1280,720);
 
 	//game update
-	int x = 200, y = 200;
+	float x = 200, y = 200;
+	float speed = 100;
 
 	eq::Game::setGameUpdate([&](float delta)
 	{
@@ -16,20 +17,41 @@ equinoxAppEntryPoint
 		swprintf(charBuffer, 256, L"Framerate: %f\n", 1/delta);
 		OutputDebugString(charBuffer);
 
-		swprintf(charBuffer, 256, L"Framerate: %f\n", 1 / delta);
-		OutputDebugString(charBuffer);
+		/*swprintf(charBuffer, 256, L"Delta: %f\n", 1 / delta);
+		OutputDebugString(charBuffer);*/
 
-		if (eq::Input::isKeyPressed(EQ_W)) y -= 50 * delta;
-		if (eq::Input::isKeyPressed(EQ_S)) y += 50 * delta;
-		if (eq::Input::isKeyPressed(EQ_A)) x -= 50 * delta;
-		if (eq::Input::isKeyPressed(EQ_D)) x += 50 * delta;
+		static int frames = 0;
+		static float timePassed = 0.f;
 
-		eq::Renderer::fillRectanglge({ x,y,200,200 }, { 255,255,0 });
+		frames++;
+		timePassed += delta;
 
-		if (eq::Input::isMouseButtonPressed(EQ_MOUSE_MIDDLE)) OutputDebugString(L"Middle button pressed\n");
-		eq::Input::Position position = eq::Input::getMousePosition();
-		swprintf(charBuffer, 256, L"%d, %d\n", position.x, position.y);
-		OutputDebugString(charBuffer);
+		if (timePassed >= 1.0f)
+		{
+			swprintf(charBuffer, 256, L"FPS: %d\n", frames);
+			//OutputDebugString(charBuffer);
+
+			frames = 0;
+			timePassed -= 1.0f;
+		}
+
+		if (eq::Input::isKeyPressed(EQ_W)) y -= speed * delta;
+		if (eq::Input::isKeyPressed(EQ_S)) y += speed * delta;
+		if (eq::Input::isKeyPressed(EQ_A)) x -= speed * delta;
+		if (eq::Input::isKeyPressed(EQ_D)) x += speed * delta;
+
+		if (eq::Input::wasKeyHit(EQ_E)) speed = 200;
+		if (eq::Input::wasKeyHit(EQ_Q)) speed = 100;
+
+		eq::Renderer::DrawRectangle(eq::Rect(x,y,200,200), { 255,255,0 });
+
+		eq::Input::Position mousePos = eq::Input::getMousePosition();
+
+		eq::Renderer::DrawTriangle(200, 200, 350, 350, mousePos.x, mousePos.y, { 0,255,0 });
+
+		swprintf(charBuffer, 256, L"%d : %d\n", mousePos.x, mousePos.y);
+		//OutputDebugString(charBuffer);
+		
 	}
 	);
 

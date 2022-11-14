@@ -106,6 +106,16 @@ namespace eq
 			OutputDebugString(L"Failed to Register Window Class\n");
 		}
 
+		DWORD windowStyle = WS_MAXIMIZEBOX | WS_SYSMENU | WS_CAPTION;
+
+		RECT windowRect = {};
+		windowRect.left = 0;
+		windowRect.top = 0;
+		windowRect.right = windowWidth;
+		windowRect.bottom = windowHeight;
+
+		AdjustWindowRect(&windowRect, windowStyle, false);
+
 		windowHandle = CreateWindowEx(
 			0,
 			className,
@@ -113,8 +123,8 @@ namespace eq
 			WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
-			windowWidth,
-			windowHeight,
+			windowRect.right - windowRect.left,
+			windowRect.bottom - windowRect.top,
 			0,
 			0,
 			hInstance,
@@ -139,6 +149,7 @@ namespace eq
 
 				LARGE_INTEGER currentCounter;
 				float delta = 0;
+				QueryPerformanceCounter(&currentCounter);
 				while(delta < secondsPerFrame)
 				{
 				QueryPerformanceCounter(&currentCounter);

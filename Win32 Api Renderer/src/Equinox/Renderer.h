@@ -13,6 +13,11 @@ namespace eq
 	struct Rect
 	{
 		int x, y, width, height;
+
+		Rect(float x, float y, float width, float height) :
+			x(int(x + 0.5f)), y(int(y + 0.5f)), width(int(width + 0.5f)), height(int(height + 0.5f))
+		{}
+
 	};
 
 	class Renderer
@@ -42,9 +47,15 @@ namespace eq
 		RGBColor clearColor;
 
 	public:
-		inline static void setClearColor(const RGBColor& color) { getInstance().clearColor = color; }
-		static void setPixel(int x, int y, const RGBColor& color);
-		static void fillRectanglge(const Rect& rect, const RGBColor& color);
+		static void setClearColor(const RGBColor& color) { getInstance().clearColor = color; }
+		static void SetPixel(int x, int y, const RGBColor& color);
+		static void FillRectangle(const Rect& rect, const RGBColor& color);
+		static void DrawRectangle(const Rect& rect, const RGBColor& color);
+		static void DrawLine(int x0, int y0, int x1, int y1, const RGBColor& color);
+		static void FillCircle(int originX, int originY, int radius, const RGBColor& color);
+		static void FillEllipse(int originX, int originY, int radiusX, int radiusY, const RGBColor& color);
+		static void DrawCircle(int originX, int originY, int radius, const RGBColor& color);
+		static void DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, const RGBColor& color);
 
 	private:
 		Renderer() { buffer = {}; clearColor = { 255, 255, 255 }; }
@@ -66,5 +77,8 @@ namespace eq
 		static void resizeFrameBuffer(int width, int height);
 		static void copyBufferToWindow(HDC deviceContext, int windowWidth, int windowHeight);
 		static void clear();
+
+		static void plotLineLow(int x0, int y0, int x1, int y1, const RGBColor& color);
+		static void plotLineHigh(int x0, int y0, int x1, int y1, const RGBColor& color);
 	};
 }
