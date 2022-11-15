@@ -146,8 +146,10 @@
     <ClCompile Include="src\Equinox\Physics\PhysicsWorld.cpp" />
     <ClCompile Include="src\Equinox\Physics\Shapes\BoxShape.cpp" />
     <ClCompile Include="src\Equinox\Physics\Shapes\CircleShape.cpp" />
+    <ClCompile Include="src\Equinox\Physics\CollisionDetector.cpp" />
     <ClCompile Include="src\Equinox\Physics\Shapes\PolygonShape.cpp" />
     <ClCompile Include="src\Equinox\Physics\Shapes\Shape.cpp" />
+    <ClCompile Include="src\Equinox\Physics\Shapes\Shapes.h" />
     <ClCompile Include="src\Equinox\Renderer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -160,6 +162,7 @@
     <ClInclude Include="src\Equinox\Math\Vector2.h" />
     <ClInclude Include="src\Equinox\Math\Vector3.h" />
     <ClInclude Include="src\Equinox\Math\Vector4.h" />
+    <ClInclude Include="src\Equinox\Physics\CollisionDetector.h" />
     <ClInclude Include="src\Equinox\Physics\eqPhysics.h" />
     <ClInclude Include="src\Equinox\Physics\PhysicsWorld.h" />
     <ClInclude Include="src\Equinox\Physics\Shapes\BoxShape.h" />

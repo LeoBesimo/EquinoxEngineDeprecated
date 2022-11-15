@@ -148,8 +148,14 @@ namespace eq
 		}
 	}
 
-	Input::Position Input::getMousePosition()
+	Input::Position Input::getMousePosition(Math::Vector2* position)
 	{
+		if(position)
+		{ 
+			position->x = mouse.position.x;
+			position->y = mouse.position.y;
+		}
+
 		return mouse.position;
 	}
 

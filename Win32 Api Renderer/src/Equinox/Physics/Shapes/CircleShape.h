@@ -17,6 +17,10 @@ namespace eq
 
 			void update(float delta);
 			void render();
+
+		public:
+			float getRadius() { return this->radius; }
+			void setRadius(float radius) { this->radius = radius; }
 		
 		private:
 			void applyGravity();

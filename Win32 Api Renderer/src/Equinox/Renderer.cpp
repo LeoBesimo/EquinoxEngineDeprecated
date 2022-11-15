@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include <cstdio>
 
 namespace eq
 {
@@ -8,18 +9,16 @@ namespace eq
 	{
 		BitmapBuffer& buffer = getInstance().buffer;
 
-		if (x < 0 || x > buffer.width || y < 0 || y > buffer.height)
+		if (x < 0 || x >= buffer.width || y < 0 || y >= buffer.height)
+		{
 			return;
+		}
+		uint32_t raw_color = (color.red << 16) | (color.green << 8) | (color.blue << 0);
 
 		uint8_t* row = (uint8_t*)buffer.memory + x * bytesPerPixel + y * buffer.pitch;
 		uint32_t* pixel = (uint32_t*)row;
 
-		//Color pixelColor = ColorFromUInt(*pixel);
-
-		//uint32_t rawColor = BlendColor(color, *pixel); // = (color.red << 16) | (color.green << 8) | (color.blue << 0);
-
-		uint32_t rawColor = (color.red << 16) | (color.green << 8) | (color.blue << 0);
-		*pixel = rawColor;
+		*pixel = raw_color;
 
 	}
 
@@ -164,8 +163,9 @@ namespace eq
 		buffer.info.bmiHeader.biBitCount = 32;
 		buffer.info.bmiHeader.biCompression = BI_RGB;
 
-		int bufferMemorySize = buffer.width * buffer.height * bytesPerPixel;
+		int bufferMemorySize = (buffer.width) * (buffer.height) * bytesPerPixel;
 		buffer.memory = VirtualAlloc(0, bufferMemorySize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+		
 		buffer.pitch = buffer.width * bytesPerPixel;
 	}
 

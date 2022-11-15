@@ -12,6 +12,7 @@ namespace eq
 			original[2] = Math::Vector2(1, 1);
 			original[3] = Math::Vector2(-1, 1);
 			transformPoints();
+			calculateUnits();
 		}
 
 		void BoxShape::update(float delta)
@@ -23,10 +24,10 @@ namespace eq
 
 		void BoxShape::render()
 		{
-			Renderer::DrawLine(transformed[0], transformed[1], Color(255,0,0));
-			Renderer::DrawLine(transformed[1], transformed[2], Color(0,0,255));
-			Renderer::DrawLine(transformed[2], transformed[3], Color(255,255,0));
-			Renderer::DrawLine(transformed[0], transformed[3], Color(0, 255, 0));	
+			Renderer::DrawLine(transformed[0], transformed[1], getColor());
+			Renderer::DrawLine(transformed[1], transformed[2], getColor());
+			Renderer::DrawLine(transformed[2], transformed[3], getColor());
+			Renderer::DrawLine(transformed[0], transformed[3], getColor());
 		}
 
 		void BoxShape::transformPoints()

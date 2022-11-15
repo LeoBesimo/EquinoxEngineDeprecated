@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <windowsx.h>
 #include <stdint.h>
+#include "Math/eqMath.h"
 
 #define EQ_MAX_KEYS 52
 
@@ -122,7 +123,7 @@ namespace eq
 		static bool isKeyReleased(uint32_t keycode);
 		static bool wasKeyHit(uint32_t keycode);
 
-		static Position getMousePosition();
+		static Position getMousePosition(Math::Vector2* position = nullptr);
 		static bool isMouseButtonPressed(unsigned int buttonCode);
 		static bool isMouseButtonReleased(unsigned int buttonCode);
 		static bool wasMouseButtonHit(unsigned int buttonCode);

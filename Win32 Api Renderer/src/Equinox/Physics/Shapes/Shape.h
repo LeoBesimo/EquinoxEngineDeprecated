@@ -37,6 +37,8 @@ namespace eq
 			float invMass;
 			float invInertia;
 
+			Color color;
+
 
 		public:
 			Shape(Math::Vector2 position, float angle, ShapeType type, Material material, Math::Matrix2x2 scale);
@@ -68,6 +70,8 @@ namespace eq
 			float getInvMass() { return invMass; }
 			float getInvInertia() { return invInertia; }
 
+			Color getColor() { return color; }
+
 			//Set
 			void setShapeType(ShapeType type) { this->type = type; }
 			void setMaterial(Material material) { this->material = material; }
@@ -86,6 +90,8 @@ namespace eq
 
 			void setMass(float mass);
 			void setInertia(float inertia);
+
+			void setColor(Color color) { this->color = color; }
 
 			void setStatic();
 

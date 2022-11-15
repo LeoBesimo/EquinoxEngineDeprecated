@@ -54,8 +54,8 @@ namespace eq
 		inline static void setWindowProperties(const std::wstring& title, const int& width, const int& height)
 		{
 			getInstance().windowTitle = title;
-			getInstance().windowWidth = width;
-			getInstance().windowHeight = height;
+			getInstance().windowWidth = width + 1;
+			getInstance().windowHeight = height + 1;
 		}
 
 		inline static void setGameUpdate(const std::function<void(float delta)>& update) { getInstance().update = update; }

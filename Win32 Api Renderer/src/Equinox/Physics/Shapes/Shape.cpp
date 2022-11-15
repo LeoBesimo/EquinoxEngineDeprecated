@@ -4,8 +4,8 @@ namespace eq
 {
 	namespace Physics
 	{
-		Shape::Shape(Math::Vector2 position, float angle, ShapeType type, Material material, Math::Matrix2x2 scale):
-			position(position), angle(angle), type(type), material(material), scale(scale)
+		Shape::Shape(Math::Vector2 position, float angle, ShapeType type, Material material, Math::Matrix2x2 scale) :
+			position(position), angle(angle), type(type), material(material), scale(scale), color(255, 255, 255)
 		{
 			velocity = Math::Vector2();
 			force = Math::Vector2();

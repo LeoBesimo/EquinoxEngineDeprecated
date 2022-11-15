@@ -2,14 +2,12 @@
 
 equinoxAppEntryPoint
 {
-
-	//game init
-
 	eq::Game::setWindowProperties(L"Test Window", 1280,720);
 
 	eq::Physics::BoxShape shape(eq::Math::Vector2(400, 400), 0.f, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(20, 0, 0, 20));
 	shape.setOmega(eq::Math::HALF_PI);
-	//shape.setGravity(eq::Math::Vector2(0, 5));
+	shape.setGravity(eq::Math::Vector2(0, 50));
+	shape.setColor(eq::Color(255, 0, 0));
 
 	eq::Physics::PolygonShape poly(eq::Math::Vector2(600, 400), 0.f, 7, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(40, 0, 0, 40));
 	poly.setOmega(-eq::Math::QUARTER_PI);
@@ -24,27 +22,16 @@ equinoxAppEntryPoint
 		swprintf(charBuffer, 256, L"Framerate: %f\n", 1/delta);
 		OutputDebugString(charBuffer);*/
 
-		static int frames = 0;
-		static float timePassed = 0.f;
+		eq::Math::Vector2 mouse;
+		eq::Input::getMousePosition(&mouse);
 
-		frames++;
-		timePassed += delta;
+		//shape.setPosition(mouse);
 
-		if (timePassed >= 1.0f)
-		{
-			/*swprintf(charBuffer, 256, L"FPS: %d\n", frames);*/
-			//OutputDebugString(charBuffer);
+		eq::Renderer::DrawLine(1280, 0, 1280, 720, eq::Color(0,255,255));
+		eq::Renderer::DrawLine(0, 720, 1280, 720, eq::Color(0,255,255));
+		eq::Renderer::DrawLine(0, 0, 0, 720, eq::Color(0,255,255));
+		eq::Renderer::DrawLine(0, 0, 1280, 0, eq::Color(0,255,255));
 
-			frames = 0;
-			timePassed -= 1.0f;
-
-
-		}
-
-		eq::Input::Position mouse = eq::Input::getMousePosition();
-		//shape.setPosition(eq::Math::Vector2(mouse.x, mouse.y));
-
-		//eq::Renderer::DrawLine(eq::Game::getWindowWidth() / 2, eq::Game::getWindowHeight() / 2, mouse.x, mouse.y, eq::Color(255, 0, 0));
 		poly.update(delta);
 		poly.render();
 

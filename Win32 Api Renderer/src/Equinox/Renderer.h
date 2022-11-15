@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include "Math/eqMath.h"
 

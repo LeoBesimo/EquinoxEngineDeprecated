@@ -5,8 +5,8 @@ namespace eq
 	Game::Game()
 	{
 		windowTitle = L"Equinox Application";
-		windowWidth = 1920;
-		windowHeight = 1080;
+		windowWidth = 1921;
+		windowHeight = 1081;
 	}
 
 	Game::~Game()
@@ -90,7 +90,7 @@ namespace eq
 
 	void Game::startWindow()
 	{
-		Renderer::resizeFrameBuffer(windowWidth, windowHeight);
+		
 
 		const wchar_t* className = L"Equinox Window";
 
@@ -137,6 +137,11 @@ namespace eq
 			running = true;
 
 			Renderer::setWindowHandle(windowHandle);
+
+			int bufferWidth = 0;
+			int bufferHeight = 0;
+			Renderer::getWindowDimenstions(&bufferWidth, &bufferHeight);
+			Renderer::resizeFrameBuffer(bufferWidth, bufferHeight);
 
 			LARGE_INTEGER cpuFrequency;
 			QueryPerformanceFrequency(&cpuFrequency);

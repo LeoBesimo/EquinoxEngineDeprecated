@@ -14,6 +14,7 @@ namespace eq
 				original.push_back(originalPoint);
 				transformed.push_back(transform * originalPoint + getPosition());
 			}
+			calculateUnits();
 		}
 
 		void PolygonShape::update(float delta) 
@@ -27,7 +28,7 @@ namespace eq
 		{
 			for (unsigned int i = 0; i < transformed.size(); i++)
 			{
-				Renderer::DrawLine(transformed[i], transformed[(i + 1) % transformed.size()], Color(255, 0, 0));
+				Renderer::DrawLine(transformed[i], transformed[(i + 1) % transformed.size()], getColor());
 			}
 		}
 

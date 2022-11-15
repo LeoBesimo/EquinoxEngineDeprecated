@@ -45,6 +45,12 @@
     <ClCompile Include="src\Equinox\Physics\PhysicsWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Equinox\Physics\Shapes\Shapes.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Equinox\Physics\CollisionDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Equinox\Equinox.h">
@@ -93,6 +99,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Equinox\Physics\Shapes\CircleShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Equinox\Physics\CollisionDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

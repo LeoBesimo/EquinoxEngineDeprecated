@@ -6,7 +6,9 @@ namespace eq
 	{
 		CircleShape::CircleShape(Math::Vector2 position, float angle, float radius, Material material) :
 			Shape(position, angle, ShapeType::Circle, material, Math::Matrix2x2()), radius(radius)
-		{}
+		{
+			calculateUnits();
+		}
 
 		void CircleShape::update(float delta)
 		{
@@ -18,8 +20,8 @@ namespace eq
 		{
 			Math::Vector2 point(radius, 0);
 			point = Math::Matrix2x2(getAngle()) * point + getPosition();
-			Renderer::DrawLine(getPosition(), point, Color(0,255,0));
-			Renderer::DrawCircle(getPosition(), radius, Color(0, 255, 0));
+			Renderer::DrawLine(getPosition(), point, getColor());
+			Renderer::DrawCircle(getPosition(), radius, getColor());
 		}
 
 		void CircleShape::applyGravity()

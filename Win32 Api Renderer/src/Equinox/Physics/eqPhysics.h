@@ -1,9 +1,7 @@
 #pragma once
 
 #include "PhysicsWorld.h"
-#include "Shapes/BoxShape.h"
-#include "Shapes/PolygonShape.h"
-#include "Shapes/CircleShape.h"
+#include "Shapes/Shapes.h"
 
 namespace eq
 {
