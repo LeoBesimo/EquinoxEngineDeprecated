@@ -8,12 +8,11 @@ namespace eq
 		{
 			Manifold manifold;
 
-			Math::Vector2 distance = (bodyB->getPosition() - bodyB->getPosition());
-			float distSqr = distance.lenSqr();
-			float radiiSqr = bodyA->getRadius() + bodyB->getRadius();
-			radiiSqr *= radiiSqr;
+			Math::Vector2 distanceVector = (bodyB->getPosition() - bodyA->getPosition());
+			float distance = distanceVector.lenSqr();
+			float radii = bodyA->getRadius() + bodyB->getRadius();
 
-			if (distSqr >= radiiSqr)
+			if (distance >= (radii * radii))
 			{
 				manifold.colliding = false;
 				return manifold;
@@ -22,8 +21,8 @@ namespace eq
 			manifold.colliding = true;
 			manifold.bodyA = bodyA;
 			manifold.bodyB = bodyB;
-			manifold.normal = (bodyB->getPosition() - bodyA->getPosition()).normalize();
-			manifold.penetration = (bodyA->getRadius() + bodyB->getRadius()) - distance.len();
+			manifold.normal = distanceVector.normalize();
+			manifold.penetration = radii - distanceVector.len();
 
 			return manifold;
 		}

@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Shapes/BoxShape.h"
-#include "Shapes/CircleShape.h"
-#include "Shapes/PolygonShape.h"
+#include "CollisionDetector.h"
+#include "Shapes/Shapes.h"
 
 namespace eq
 {

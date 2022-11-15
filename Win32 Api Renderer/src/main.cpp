@@ -16,6 +16,10 @@ equinoxAppEntryPoint
 	circle.setVelocity(eq::Math::Vector2(30, 0));
 	circle.setOmega(eq::Math::PI);
 
+	eq::Physics::CircleShape circle2(eq::Math::Vector2(600, 200), 0.f, 40, eq::Physics::Materials::SUPERBALL);
+
+	eq::Physics::CollisionDetector detector;
+
 	eq::Game::setGameUpdate([&](float delta)
 	{
 		/*wchar_t charBuffer[256];
@@ -25,7 +29,22 @@ equinoxAppEntryPoint
 		eq::Math::Vector2 mouse;
 		eq::Input::getMousePosition(&mouse);
 
+		//circle2.setPosition(mouse);
+
 		//shape.setPosition(mouse);
+
+		eq::Physics::Manifold manifold = detector.detectCollision(&circle, &circle2);
+		if (manifold.colliding)
+		{
+			circle.setColor(eq::Color(255, 0, 0));
+			circle2.setColor(eq::Color(255, 0, 0));
+		}
+		else
+		{
+			circle.setColor(eq::Color(255, 0, 255));
+			circle2.setColor(eq::Color(255, 0, 255));
+		}
+
 
 		eq::Renderer::DrawLine(1280, 0, 1280, 720, eq::Color(0,255,255));
 		eq::Renderer::DrawLine(0, 720, 1280, 720, eq::Color(0,255,255));
@@ -41,6 +60,9 @@ equinoxAppEntryPoint
 		circle.update(delta);
 		circle.render();
 		
+		circle2.update(delta);
+		circle2.render();
+
 	}
 	);
 
