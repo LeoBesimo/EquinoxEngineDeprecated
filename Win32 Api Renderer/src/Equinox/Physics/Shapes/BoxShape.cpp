@@ -16,6 +16,7 @@ namespace eq
 
 		void BoxShape::update(float delta)
 		{
+			applyGravity();
 			Shape::update(delta);
 			transformPoints();
 		}
@@ -37,6 +38,17 @@ namespace eq
 			transformed[1] = transform * original[1] + getPosition();
 			transformed[2] = transform * original[2] + getPosition();
 			transformed[3] = transform * original[3] + getPosition();
+		}
+
+		void BoxShape::applyGravity()
+		{
+			applyForce(getGravit() * getMass());
+
+			for (byte i = 0; i < 4; i++)
+			{
+				Math::Vector2 radius = transformed[i] - getPosition();
+				applyForce(getGravit() * getInertia() * 0.25, radius);
+			}
 		}
 
 		void BoxShape::calculateUnits()

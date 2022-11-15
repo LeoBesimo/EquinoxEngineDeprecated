@@ -21,6 +21,7 @@ namespace eq
 			void render();
 
 		private:
+			void applyGravity();
 			void transformPoints();
 			void calculateUnits();
 		};

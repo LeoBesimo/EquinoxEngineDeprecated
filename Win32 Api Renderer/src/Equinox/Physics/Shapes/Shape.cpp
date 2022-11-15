@@ -19,6 +19,18 @@ namespace eq
 			integrateVelocities(delta);
 		}
 
+		void Shape::applyForce(Math::Vector2 force, Math::Vector2 radius)
+		{
+			if (radius.x == 0 && radius.y == 0)
+			{
+				this->force += force;
+			}
+			else
+			{
+				torque += Math::cross(force, radius);
+			}
+		}
+
 		void Shape::setMass(float mass)
 		{
 			this->mass = mass;

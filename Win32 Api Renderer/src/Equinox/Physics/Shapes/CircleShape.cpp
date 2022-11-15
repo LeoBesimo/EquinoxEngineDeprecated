@@ -10,6 +10,7 @@ namespace eq
 
 		void CircleShape::update(float delta)
 		{
+			applyGravity();
 			Shape::update(delta);
 		}
 
@@ -19,6 +20,11 @@ namespace eq
 			point = Math::Matrix2x2(getAngle()) * point + getPosition();
 			Renderer::DrawLine(getPosition(), point, Color(0,255,0));
 			Renderer::DrawCircle(getPosition(), radius, Color(0, 255, 0));
+		}
+
+		void CircleShape::applyGravity()
+		{
+			applyForce(getGravit() * getMass());
 		}
 
 		void CircleShape::calculateUnits()

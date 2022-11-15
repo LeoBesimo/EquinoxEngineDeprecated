@@ -24,6 +24,8 @@ namespace eq
 			Math::Vector2 velocity;
 			Math::Vector2 force;
 
+			Math::Vector2 gravity;
+
 			float angle;
 			float omega;
 			float torque;
@@ -53,6 +55,8 @@ namespace eq
 			Math::Vector2 getVelocity() { return velocity; }
 			Math::Vector2 getForce() { return force; }
 
+			Math::Vector2 getGravit() { return gravity; }
+
 			float getAngle() { return angle; }
 			float getOmega() { return omega; }
 			float getTorque() { return torque; }
@@ -72,6 +76,8 @@ namespace eq
 			void setVelocity(Math::Vector2 velocity) { this->velocity = velocity; }
 			void setForce(Math::Vector2 force) { this->force = force; }
 
+			void setGravity(Math::Vector2 gravity) { this->gravity = gravity; }
+
 			void setAngle(float angle) { this->angle = angle; }
 			void setOmega(float omega) { this->omega = omega; }
 			void setTorque(float torque) { this->torque = torque; }
@@ -84,6 +90,7 @@ namespace eq
 			void setStatic();
 
 		private:
+			virtual void applyGravity() = 0;
 			void integrateForces(float delta);
 			void integrateVelocities(float delta);
 

@@ -18,6 +18,7 @@ namespace eq
 
 		void PolygonShape::update(float delta) 
 		{
+			applyGravity();
 			Shape::update(delta);
 			transformPoints();
 		}
@@ -36,6 +37,19 @@ namespace eq
 			{
 				Math::Matrix2x2 transform = getScale() * Math::Matrix2x2(getAngle());
 				transformed[i] = transform * original[i] + getPosition();
+			}
+		}
+
+		void PolygonShape::applyGravity()
+		{
+			applyForce(getGravit() * getMass());
+
+			float factor = 1 / sides;
+
+			for (unsigned int i = 0; i < sides; i++)
+			{
+				Math::Vector2 radius = transformed[i] - getPosition();
+				applyForce(getGravit() * getInertia() * factor, radius);
 			}
 		}
 

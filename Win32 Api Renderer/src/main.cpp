@@ -9,6 +9,7 @@ equinoxAppEntryPoint
 
 	eq::Physics::BoxShape shape(eq::Math::Vector2(400, 400), 0.f, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(20, 0, 0, 20));
 	shape.setOmega(eq::Math::HALF_PI);
+	//shape.setGravity(eq::Math::Vector2(0, 5));
 
 	eq::Physics::PolygonShape poly(eq::Math::Vector2(600, 400), 0.f, 7, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(40, 0, 0, 40));
 	poly.setOmega(-eq::Math::QUARTER_PI);

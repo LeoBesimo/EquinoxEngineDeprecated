@@ -143,6 +143,7 @@
     <ClCompile Include="src\Equinox\Game.cpp" />
     <ClCompile Include="src\Equinox\Input.cpp" />
     <ClCompile Include="src\Equinox\Math\eqMath.cpp" />
+    <ClCompile Include="src\Equinox\Physics\PhysicsWorld.cpp" />
     <ClCompile Include="src\Equinox\Physics\Shapes\BoxShape.cpp" />
     <ClCompile Include="src\Equinox\Physics\Shapes\CircleShape.cpp" />
     <ClCompile Include="src\Equinox\Physics\Shapes\PolygonShape.cpp" />
