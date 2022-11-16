@@ -21,8 +21,10 @@ namespace eq
 			manifold.colliding = true;
 			manifold.bodyA = bodyA;
 			manifold.bodyB = bodyB;
-			manifold.normal = distanceVector.normalize();
 			manifold.penetration = radii - distanceVector.len();
+			manifold.normal = distanceVector.normalize();
+			manifold.contact = bodyA->getPosition() + (manifold.normal * (bodyA->getRadius() - manifold.penetration));
+
 
 			return manifold;
 		}

@@ -53,5 +53,10 @@ namespace eq
 				a.x * b.y - a.y * b.x
 			);
 		}
+
+		float square(float n)
+		{
+			return n * n;
+		}
 	}
 }

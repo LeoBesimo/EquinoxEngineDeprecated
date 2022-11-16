@@ -24,5 +24,7 @@ namespace eq
 
 		float cross(Vector2 a, Vector2 b);
 		Vector3 cross(Vector3 a, Vector3 b);
+
+		float square(float n);
 	}
 }

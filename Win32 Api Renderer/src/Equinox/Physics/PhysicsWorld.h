@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CollisionDetector.h"
+#include "CollisionSolver.h"
 #include "Shapes/Shapes.h"
 
 namespace eq
