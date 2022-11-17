@@ -19,6 +19,9 @@ namespace eq
 			void update(float delta);
 			void render();
 
+		public:
+			Math::Vector2* getCorners() { return transformed; };
+
 		private:
 			void applyGravity();
 			void transformPoints();

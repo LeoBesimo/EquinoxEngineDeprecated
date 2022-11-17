@@ -20,6 +20,8 @@ namespace eq
 			void update(float delta);
 			void render();
 
+			std::vector<Math::Vector2> getCorners() { return this->transformed; }
+
 		private:
 			void applyGravity();
 			void transformPoints();

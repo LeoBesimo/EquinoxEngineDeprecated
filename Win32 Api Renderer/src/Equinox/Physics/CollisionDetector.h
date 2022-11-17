@@ -20,6 +20,14 @@ namespace eq
 		class CollisionDetector
 		{
 		private:
+			float distPointToLine(Math::Vector2 point, Math::Vector2 a, Math::Vector2 b, Math::Vector2* closest);
+			Math::Vector2 getContactBoxBox(BoxShape* bodyA, BoxShape* bodyB);
+			Math::Vector2 getContactPolygonPolygon(PolygonShape* bodyA, PolygonShape* bodyB);
+			Math::Vector2 getContactBoxPolygon(BoxShape* bodyA, PolygonShape* bodyB);
+			Math::Vector2 getContactCircleBox(CircleShape* bodyA, BoxShape* bodyB);
+			Math::Vector2 getcontactCirclePolygon(CircleShape* bodyA, PolygonShape* bodyB);
+
+
 			Manifold CircleCircleCollision(CircleShape* bodyA, CircleShape* bodyB);
 			Manifold PolygonPolygonCollision(PolygonShape* bodyA, PolygonShape* bodyB);
 			Manifold BoxBoxCollision(BoxShape* bodyA, BoxShape* bodyB);

@@ -4,6 +4,34 @@ namespace eq
 {
 	namespace Physics
 	{
+		float distPointToLine(Math::Vector2 point, Math::Vector2 a, Math::Vector2 b, Math::Vector2* closest)
+		{
+			Math::Vector2 ab = b - a;
+			Math::Vector2 ap = point - a;
+
+			float proj = Math::dot(ap, ab);
+			float abLenSqr = ab.lenSqr();
+			float d = proj / abLenSqr;
+
+			if (d <= 0)
+			{
+				closest = &a;
+			}
+			else if (d >= 1.0f)
+			{
+				closest = &b;
+			}
+			else
+			{
+				closest = &(a + (ab * d));
+			}
+
+			double dx = point.x - closest->x;
+			double dy = point.y - closest->y;
+
+			return dx * dx + dy * dy;
+		}
+
 		Manifold CollisionDetector::CircleCircleCollision(CircleShape* bodyA, CircleShape* bodyB)
 		{
 			Manifold manifold;
@@ -25,8 +53,12 @@ namespace eq
 			manifold.normal = distanceVector.normalize();
 			manifold.contact = bodyA->getPosition() + (manifold.normal * (bodyA->getRadius() - manifold.penetration));
 
-
 			return manifold;
+		}
+
+		Math::Vector2 getContactPolygonPolygon(PolygonShape* bodyA, PolygonShape* bodyB)
+		{
+
 		}
 
 		Manifold CollisionDetector::PolygonPolygonCollision(PolygonShape* bodyA, PolygonShape* bodyB)
