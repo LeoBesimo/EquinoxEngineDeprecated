@@ -1,38 +1,10 @@
 #include "CollisionDetector.h"
+#include "cstdio"
 
 namespace eq
 {
 	namespace Physics
 	{
-		float CollisionDetector::distPointToLine(Math::Vector2 point, Math::Vector2 a, Math::Vector2 b, Math::Vector2* closest)
-		{
-			Math::Vector2 ab = b - a;
-			Math::Vector2 ap = point - a;
-
-			float proj = Math::dot(ap, ab);
-			float abLenSqr = ab.lenSqr();
-			float d = proj / abLenSqr;
-
-			if (d <= 0)
-			{
-				closest = &a;
-			}
-			else if (d >= 1.0f)
-			{
-				closest = &b;
-			}
-			else
-			{
-				Math::Vector2 c = (a + (ab * d));
-				closest = &c;
-			}
-
-			double dx = point.x - closest->x;
-			double dy = point.y - closest->y;
-
-			return dx * dx + dy * dy;
-		}
-
 		Math::Vector2 CollisionDetector::getContactBoxBox(BoxShape* bodyA, BoxShape* bodyB)
 		{
 			std::vector<Math::Vector2> pointsA = bodyA->getCorners();
@@ -42,7 +14,7 @@ namespace eq
 			Math::Vector2 contact1;
 			Math::Vector2 contact2;
 
-			double minDistSqr = FLT_MAX;
+			float minDistSqr = FLT_MAX;
 
 			Math::Vector2 closest;
 
@@ -54,13 +26,13 @@ namespace eq
 				for (unsigned int j = 0; j < 4; j++)
 				{
 					Math::Vector2 a = pointsB[j];
-					Math::Vector2 b = pointsB[(j + 1) % 4];
+					Math::Vector2 b = pointsB[(j + 1) % pointsB.size()];
 
-					float distSqr = distPointToLine(p, a, b, &closest);
+					float distSqr = Math::distPointToLine(p, a, b, &closest);
 
 					if (Math::nearlyEqual(distSqr, minDistSqr))
 					{
-						if (!nearlyEqual(closest, contact1))
+						if (!Math::nearlyEqual(closest, contact1))
 						{
 							contactCount = 2;
 							contact2 = closest;
@@ -86,7 +58,7 @@ namespace eq
 					Math::Vector2 a = pointsA[j];
 					Math::Vector2 b = pointsA[(j + 1) % 4];
 
-					float distSqr = distPointToLine(p, a, b, &closest);
+					float distSqr = Math::distPointToLine(p, a, b, &closest);
 
 					if (Math::nearlyEqual(distSqr, minDistSqr))
 					{
@@ -120,7 +92,7 @@ namespace eq
 			Math::Vector2 contact1;
 			Math::Vector2 contact2;
 
-			double minDistSqr = FLT_MAX;
+			float minDistSqr = FLT_MAX;
 
 			Math::Vector2 closest;
 
@@ -134,7 +106,7 @@ namespace eq
 					Math::Vector2 a = pointsB[j];
 					Math::Vector2 b = pointsB[(j + 1) % pointsB.size()];
 
-					float distSqr = distPointToLine(p, a, b, &closest);
+					float distSqr = Math::distPointToLine(p, a, b, &closest);
 
 					if (Math::nearlyEqual(distSqr, minDistSqr))
 					{
@@ -164,7 +136,7 @@ namespace eq
 					Math::Vector2 a = pointsA[j];
 					Math::Vector2 b = pointsA[(j + 1) % pointsA.size()];
 
-					float distSqr = distPointToLine(p, a, b, &closest);
+					float distSqr = Math::distPointToLine(p, a, b, &closest);
 
 					if (Math::nearlyEqual(distSqr, minDistSqr))
 					{
@@ -198,7 +170,7 @@ namespace eq
 			Math::Vector2 contact1;
 			Math::Vector2 contact2;
 
-			double minDistSqr = FLT_MAX;
+			float minDistSqr = FLT_MAX;
 
 			Math::Vector2 closest;
 
@@ -212,7 +184,7 @@ namespace eq
 					Math::Vector2 a = pointsB[j];
 					Math::Vector2 b = pointsB[(j + 1) % pointsB.size()];
 
-					float distSqr = distPointToLine(p, a, b, &closest);
+					float distSqr = Math::distPointToLine(p, a, b, &closest);
 
 					if (Math::nearlyEqual(distSqr, minDistSqr))
 					{
@@ -242,7 +214,7 @@ namespace eq
 					Math::Vector2 a = pointsA[j];
 					Math::Vector2 b = pointsA[(j + 1) % 4];
 
-					float distSqr = distPointToLine(p, a, b, &closest);
+					float distSqr = Math::distPointToLine(p, a, b, &closest);
 
 					if (Math::nearlyEqual(distSqr, minDistSqr))
 					{
@@ -273,9 +245,9 @@ namespace eq
 
 			for (unsigned int i = 0; i < corners.size(); i++)
 			{
-				unsigned int j = (i + 1) % 4;
+				unsigned int j = (i + 1) % corners.size();
 				Math::Vector2 edge = corners[j] - corners[i];
-				normals.push_back(Math::Vector2(-edge.y, edge.x));
+				normals[i] = (Math::Vector2(-edge.y, edge.x));
 			}
 			return normals;
 		}
@@ -287,7 +259,7 @@ namespace eq
 
 			for (unsigned int i = 1; i < corners.size(); i++)
 			{
-				double currentProj = Math::dot(corners[i], normal);
+				float currentProj = Math::dot(corners[i], normal);
 				if (currentProj < minProj)
 				{
 					minProj = currentProj;
@@ -338,7 +310,7 @@ namespace eq
 			bool separated = false;
 
 			Math::Vector2 normal;
-			double minDepth = FLT_MAX;
+			float minDepth = FLT_MAX;
 
 			for (unsigned int i = 0; i < normalsPoly1.size(); i++)
 			{
@@ -382,7 +354,7 @@ namespace eq
 
 			if (!separated)
 			{
-				Math::Vector2 ab = bodyA->getPosition() - bodyB->getPosition();
+				Math::Vector2 ab = bodyB->getPosition() - bodyA->getPosition();
 
 				if (Math::dot(ab, normal) < 0) normal *= -1;
 
@@ -407,7 +379,7 @@ namespace eq
 			bool separated = false;
 
 			Math::Vector2 normal;
-			double minDepth = FLT_MAX;
+			float minDepth = FLT_MAX;
 
 			for (unsigned int i = 0; i < normalsPoly1.size(); i++)
 			{
@@ -447,18 +419,22 @@ namespace eq
 				}
 			}
 
-			m.colliding = !separated;
+			m.colliding = false;
 
 			if (!separated)
 			{
-				Math::Vector2 ab = bodyA->getPosition() - bodyB->getPosition();
+				Math::Vector2 ab = bodyB->getPosition() - bodyA->getPosition();
 
 				if (Math::dot(ab, normal) < 0) normal *= -1;
 
 				m.penetration = minDepth / normal.len();
 				m.normal = normal.normalize();
 				m.contact = getContactBoxBox(bodyA, bodyB);
+				m.colliding = true;
+				OutputDebugString(L"test\n");
+
 			}
+
 
 			return m;
 		}
@@ -486,7 +462,7 @@ namespace eq
 			bool separated = false;
 
 			Math::Vector2 normal;
-			double minDepth = FLT_MAX;
+			float minDepth = FLT_MAX;
 
 			for (unsigned int i = 0; i < normalsPoly1.size(); i++)
 			{
@@ -530,7 +506,7 @@ namespace eq
 
 			if (!separated)
 			{
-				Math::Vector2 ab = bodyA->getPosition() - bodyB->getPosition();
+				Math::Vector2 ab = bodyB->getPosition() - bodyA->getPosition();
 
 				if (Math::dot(ab, normal) < 0) normal *= -1;
 

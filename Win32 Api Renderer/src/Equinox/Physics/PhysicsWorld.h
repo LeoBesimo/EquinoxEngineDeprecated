@@ -13,28 +13,55 @@ namespace eq
 
 		private:
 			std::vector<Shape*> bodies;
+			CollisionDetector detector;
+			CollisionSolver solver;
 
-		private:
-			PhysicsWorld();
-		
+			Math::Vector2 GRAVITY;
+
 		public:
-			static PhysicsWorld& getInstance()
+			PhysicsWorld() {}
+
+			void addBody(Shape* body)
 			{
-				PhysicsWorld world;
-				return world;
+				bodies.push_back(body);
 			}
 
-			static void AddBody(Shape* body)
-			{
-				getInstance().bodies.push_back(body);
-			}
+			BoxShape* addBox(
+				Math::Vector2 position, 
+				float angle, 
+				Material material, 
+				Math::Vector2 scale, 
+				Math::Vector2 velocity =  Math::Vector2(),
+				float omega = 0,
+				Math::Vector2 gravity = Math::Vector2(), 
+				Color color = Color(255,255,255)
+			);
+			CircleShape* addCircle(
+				Math::Vector2 position,
+				float angle,
+				float radius,
+				Material material,
+				Math::Vector2 velocity = Math::Vector2(),
+				float omega = 0,
+				Math::Vector2 gravity = Math::Vector2(),
+				Color color = Color(255, 255, 255)
+			);
+			PolygonShape* addPolygon(
+				Math::Vector2 position,
+				float angle,
+				int sides,
+				Material material,
+				Math::Matrix2x2 scale,
+				Math::Vector2 velocity = Math::Vector2(),
+				float omega = 0,
+				Math::Vector2 gravity = Math::Vector2(),
+				Color color = Color(255, 255, 255)
+			);
 
-			static BoxShape* AddBox();
-			static CircleShape* AddCircle();
-			static PolygonShape* AddPolygon();
+			void setWorldGravity(Math::Vector2 gravity);
 
-			static void Update(float delta);
-			static void Render();
+			void update(float delta);
+			void render();
 		};
 	}
 }

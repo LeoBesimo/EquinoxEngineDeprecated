@@ -43,7 +43,7 @@ namespace eq
 		public:
 			Shape(Math::Vector2 position, float angle, ShapeType type, Material material, Math::Matrix2x2 scale);
 
-			void update(float delta);
+			virtual void update(float delta);
 			virtual void render() = 0;
 
 			void applyForce(Math::Vector2 force, Math::Vector2 radius = Math::Vector2());

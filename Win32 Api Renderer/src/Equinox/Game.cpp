@@ -10,9 +10,7 @@ namespace eq
 	}
 
 	Game::~Game()
-	{
-
-	}
+	{}
 
 	LRESULT CALLBACK WindowCallback(
 		HWND windowHandle,

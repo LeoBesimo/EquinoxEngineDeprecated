@@ -18,6 +18,11 @@ namespace eq
 		const float THRESHOLD = 1.0f;
 
 		float pythagoreanSolve(float x, float y);
+		float pythagoreanSolve(float x, float y, float z);
+		float pythagoreanSolve(float w, float x, float y, float z);
+		float pythagoreanSolve(Vector2 a, Vector2 b);
+		float pythagoreanSolve(Vector3 a, Vector3 b);
+		float pythagoreanSolve(Vector4 a, Vector4 b);
 		float fastInvSquareRoot(float n);
 
 		float dot(Vector2 a, Vector2 b);
@@ -33,5 +38,8 @@ namespace eq
 		bool nearlyEqual(Vector2 a, Vector2 b);
 		bool nearlyEqual(Vector3 a, Vector3 b);
 		bool nearlyEqual(Vector4 a, Vector4 b);
+
+		float distPointToLine(Vector2 point, Vector2 a, Vector2 b, Vector2* closest);
+
 	}
 }

@@ -12,6 +12,7 @@ namespace eq
 			CollisionSolver() {};
 			
 			void resolveDynamic(Manifold m);
+			void resolveDynamicWithFriction(Manifold m);
 		};
 	}
 }
