@@ -15,6 +15,8 @@ namespace eq
 		const float TWO_PI = (float)(PI * 2.0);
 		const float E = (float)(2.7182818284590452353602874713527);
 
+		const float THRESHOLD = 1.0f;
+
 		float pythagoreanSolve(float x, float y);
 		float fastInvSquareRoot(float n);
 
@@ -26,5 +28,10 @@ namespace eq
 		Vector3 cross(Vector3 a, Vector3 b);
 
 		float square(float n);
+
+		bool nearlyEqual(float a, float b);
+		bool nearlyEqual(Vector2 a, Vector2 b);
+		bool nearlyEqual(Vector3 a, Vector3 b);
+		bool nearlyEqual(Vector4 a, Vector4 b);
 	}
 }

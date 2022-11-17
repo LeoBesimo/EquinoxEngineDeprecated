@@ -58,5 +58,21 @@ namespace eq
 		{
 			return n * n;
 		}
+		bool nearlyEqual(float a, float b)
+		{
+			return abs(a - b) < THRESHOLD;
+		}
+		bool nearlyEqual(Vector2 a, Vector2 b)
+		{
+			return nearlyEqual(a.x,b.x) && nearlyEqual(a.y,b.y);
+		}
+		bool nearlyEqual(Vector3 a, Vector3 b)
+		{
+			return nearlyEqual(a.x,b.x) && nearlyEqual(a.y,b.y) && nearlyEqual(a.z,b.z);
+		}
+		bool nearlyEqual(Vector4 a, Vector4 b)
+		{
+			return nearlyEqual(a.w,b.w) && nearlyEqual(a.x, b.x) && nearlyEqual(a.y, b.y) && nearlyEqual(a.z, b.z);
+		}
 	}
 }

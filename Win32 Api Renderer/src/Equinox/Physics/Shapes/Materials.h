@@ -8,16 +8,18 @@ namespace eq
 		{
 			float density;
 			float restitution;
+			float staticFriction;
+			float dynamicFriction;
 		
-			Material(float density, float restitution) :
-				density(density), restitution(restitution)
+			Material(float density, float restitution, float staticFriction, float dynamicFriction) :
+				density(density), restitution(restitution), staticFriction(staticFriction), dynamicFriction(dynamicFriction)
 			{}
 		};
 	
 		namespace Materials
 		{
-			static const Material SUPERBALL(1, 1);
-			static const Material STATIC(0, 0);
+			static const Material SUPERBALL(1, 1, 0, 0);
+			static const Material STATIC(0, 0, 0, 0);
 		}
 
 	}

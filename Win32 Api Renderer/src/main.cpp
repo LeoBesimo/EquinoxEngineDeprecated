@@ -6,17 +6,18 @@ equinoxAppEntryPoint
 
 	eq::Physics::BoxShape shape(eq::Math::Vector2(400, 400), 0.f, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(20, 0, 0, 20));
 	shape.setOmega(eq::Math::HALF_PI);
-	shape.setGravity(eq::Math::Vector2(0, 50));
+	//shape.setGravity(eq::Math::Vector2(0, 50));
+	shape.setVelocity(eq::Math::Vector2(50, 0));
 	shape.setColor(eq::Color(255, 0, 0));
 
-	eq::Physics::PolygonShape poly(eq::Math::Vector2(600, 400), 0.f, 7, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(40, 0, 0, 40));
+	eq::Physics::BoxShape box(eq::Math::Vector2(600, 400), 0.f, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(30, 0, 0, 20));
+
+	eq::Physics::PolygonShape poly(eq::Math::Vector2(600, 600), 0.f, 7, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(40, 0, 0, 40));
 	poly.setOmega(-eq::Math::QUARTER_PI);
 
 	eq::Physics::CircleShape circle(eq::Math::Vector2(400, 200), 0.f, 30, eq::Physics::Materials::SUPERBALL);
 	circle.setVelocity(eq::Math::Vector2(80, 0));
 	circle.setOmega(eq::Math::PI);
-
-	eq::Physics::CircleShape circle2(eq::Math::Vector2(600, 200), 0.f, 30, eq::Physics::Materials::SUPERBALL);
 
 	eq::Physics::CollisionDetector detector;
 	eq::Physics::CollisionSolver solver;
@@ -34,19 +35,19 @@ equinoxAppEntryPoint
 
 		//shape.setPosition(mouse);
 
-		eq::Physics::Manifold manifold = detector.detectCollision(&circle, &circle2);
+		eq::Physics::Manifold manifold = detector.detectCollision(&shape, &box);
 		if (manifold.colliding)
 		{
-			circle.setColor(eq::Color(255, 0, 0));
-			circle2.setColor(eq::Color(255, 0, 0));
+			shape.setColor(eq::Color(255, 0, 0));
+			box.setColor(eq::Color(255, 0, 0));
 			solver.resolveDynamic(manifold);
 
 			//OutputDebugString(L"Colliding");
 		}
 		else
 		{
-			circle.setColor(eq::Color(255, 0, 255));
-			circle2.setColor(eq::Color(255, 0, 255));
+			shape.setColor(eq::Color(255, 0, 255));
+			box.setColor(eq::Color(255, 0, 255));
 		}
 
 
@@ -64,8 +65,8 @@ equinoxAppEntryPoint
 		circle.update(delta);
 		circle.render();
 		
-		circle2.update(delta);
-		circle2.render();
+		box.update(delta);
+		box.render();
 
 	}
 	);

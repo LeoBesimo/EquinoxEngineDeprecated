@@ -27,6 +27,9 @@ namespace eq
 			Math::Vector2 getContactCircleBox(CircleShape* bodyA, BoxShape* bodyB);
 			Math::Vector2 getcontactCirclePolygon(CircleShape* bodyA, PolygonShape* bodyB);
 
+			std::vector<Math::Vector2> getNormals(std::vector<Math::Vector2> corners);
+
+			Math::Vector2 getMinMax(std::vector<Math::Vector2> points, Math::Vector2 normal);
 
 			Manifold CircleCircleCollision(CircleShape* bodyA, CircleShape* bodyB);
 			Manifold PolygonPolygonCollision(PolygonShape* bodyA, PolygonShape* bodyB);

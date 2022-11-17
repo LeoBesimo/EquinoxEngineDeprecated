@@ -11,7 +11,7 @@ namespace eq
 		{
 		private:
 			Math::Vector2 original[4];
-			Math::Vector2 transformed[4];
+			std::vector<Math::Vector2> transformed;
 
 		public:
 			BoxShape(Math::Vector2 position, float angle, Material material, Math::Matrix2x2 scale);
@@ -20,7 +20,7 @@ namespace eq
 			void render();
 
 		public:
-			Math::Vector2* getCorners() { return transformed; };
+			std::vector<Math::Vector2> getCorners() { return transformed; };
 
 		private:
 			void applyGravity();

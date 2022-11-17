@@ -11,6 +11,11 @@ namespace eq
 			original[1] = Math::Vector2(1, -1);
 			original[2] = Math::Vector2(1, 1);
 			original[3] = Math::Vector2(-1, 1);
+			transformed.reserve(4);
+			
+			for (unsigned int i = 0; i < 4; i++)
+				transformed.push_back(Math::Vector2());
+			
 			transformPoints();
 			calculateUnits();
 		}
