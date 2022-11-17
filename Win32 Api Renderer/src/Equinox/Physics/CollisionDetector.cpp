@@ -25,7 +25,6 @@ namespace eq
 			manifold.normal = distanceVector.normalize();
 			manifold.contact = bodyA->getPosition() + (manifold.normal * (bodyA->getRadius() - manifold.penetration));
 
-
 			return manifold;
 		}
 

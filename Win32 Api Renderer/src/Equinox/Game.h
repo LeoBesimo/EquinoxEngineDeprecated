@@ -30,7 +30,7 @@ namespace eq
 
 		std::function<void(float delta)> update;
 
-		float secondsPerFrame = 1.f / 600.f;
+		float secondsPerFrame = 1.f / 6000.f;
 
 	public:
 		Game();

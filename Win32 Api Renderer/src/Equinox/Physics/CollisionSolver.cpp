@@ -18,10 +18,7 @@ namespace eq
 			Math::Vector2 raPerp(-ra.y, ra.x);
 			Math::Vector2 rbPerp(-rb.y, rb.x);
 
-			Math::Vector2 velB = bodyB->getVelocity();
-			Math::Vector2 velA = bodyA->getVelocity();
-
-			Math::Vector2 rv = (velB + rbPerp * bodyB->getOmega()) - (velA + raPerp * bodyA->getOmega());
+			Math::Vector2 rv = (bodyB->getVelocity() + rbPerp * bodyB->getOmega()) - (bodyA->getVelocity() + raPerp * bodyA->getOmega());
 			
 			float contactVelMag = Math::dot(rv, normal);
 			if (contactVelMag > 0)

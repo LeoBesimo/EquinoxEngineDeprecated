@@ -2,7 +2,7 @@
 
 equinoxAppEntryPoint
 {
-	eq::Game::setWindowProperties(L"Test Window", 800,800);
+	eq::Game::setWindowProperties(L"Test Window", 1000,800);
 
 	eq::Physics::BoxShape shape(eq::Math::Vector2(400, 400), 0.f, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(20, 0, 0, 20));
 	shape.setOmega(eq::Math::HALF_PI);
