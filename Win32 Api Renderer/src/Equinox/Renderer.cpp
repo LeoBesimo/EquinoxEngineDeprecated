@@ -136,6 +136,19 @@ namespace eq
 		DrawLine(x1, y1, x2, y2, color);
 	}
 
+	void Renderer::WriteText(const wchar_t* text, int x, int y, const Color& color)
+	{
+		int length = wcslen(text);
+		Text textStruct;
+		textStruct.length = length;
+		textStruct.text = text;
+		textStruct.x = x;
+		textStruct.y = y;
+		textStruct.color = color;
+		getInstance().text.push_back(textStruct);
+		//DrawText(deviceContext, text, length, &textFormat, DT_CENTER | DT_CALCRECT);
+	}
+
 	void Renderer::getWindowDimenstions(int* outWidth, int* outHeight)
 	{
 		RECT clientRect;
@@ -182,6 +195,15 @@ namespace eq
 			DIB_RGB_COLORS,
 			SRCCOPY
 		);
+
+		SetBkMode(deviceContext, TRANSPARENT);
+		for (Text text : getInstance().text)
+		{
+			SetTextColor(deviceContext, RGB(text.color.red, text.color.green, text.color.blue));
+			TextOut(deviceContext, text.x, text.y, text.text, text.length);
+		}
+
+		getInstance().text.clear();
 	}
 
 	void Renderer::clear()

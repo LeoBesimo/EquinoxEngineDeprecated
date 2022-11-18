@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <stdint.h>
 #include <assert.h>
+#include <vector>
 
 #include "Math/eqMath.h"
 
@@ -35,6 +36,14 @@ namespace eq
 
 	};
 
+	struct Text
+	{
+		int x, y;
+		int length;
+		const wchar_t* text;
+		Color color;
+	};
+
 	class Renderer
 	{
 		friend LRESULT CALLBACK WindowCallback(
@@ -60,6 +69,7 @@ namespace eq
 		HWND windowHandle = 0;
 		BitmapBuffer buffer;
 		Color clearColor;
+		std::vector<Text> text;
 
 		static float alphaScaler;
 
@@ -75,6 +85,8 @@ namespace eq
 		static void DrawCircle(int originX, int originY, int radius, const Color& color);
 		static void DrawCircle(Math::Vector2 position, int radius, const Color& color);
 		static void DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, const Color& color);
+		
+		static void WriteText(const wchar_t* text, int x, int y, const Color& color);
 
 	private:
 		Renderer() { buffer = {}; clearColor = Color(255, 255, 255, 255); alphaScaler = 1 / 255; }

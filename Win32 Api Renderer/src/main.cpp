@@ -43,6 +43,13 @@ equinoxAppEntryPoint
 
 		world.update(delta);
 		world.render();
+
+		wchar_t charBuffer[64];
+		swprintf(charBuffer, 64,L"Framerate: %d", int(1 / delta + 0.5f));
+		eq::Renderer::WriteText(charBuffer, 10, 10, eq::Color(255,0,255));
+
+
+		eq::Renderer::WriteText(L"Test", 200, 200, eq::Color(255,0,255));
 	}
 	);
 
