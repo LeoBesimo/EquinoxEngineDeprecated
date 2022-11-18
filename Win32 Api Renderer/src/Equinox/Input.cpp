@@ -23,7 +23,10 @@ namespace eq
 
 	bool  Input::wasKeyHit(uint32_t keycode)
 	{
-		return ((!keyboard.keys[keycode].wasDown) && keyboard.keys[keycode].isDown);
+		bool keyHit = ((!keyboard.keys[keycode].wasDown) && keyboard.keys[keycode].isDown);
+		keyboard.keys[keycode].wasDown = 0;
+		keyboard.keys[keycode].isDown = 0;
+		return keyHit;
 	}
 
 	void Input::processKeyboardInput(uint32_t VKCode, bool wasDown, bool isDown)
@@ -172,7 +175,10 @@ namespace eq
 
 	bool Input::wasMouseButtonHit(unsigned int buttonCode)
 	{
-		return ((!mouse.buttons[buttonCode].wasDown) && mouse.buttons[buttonCode].isDown);
+		bool hit = ((!mouse.buttons[buttonCode].wasDown) && mouse.buttons[buttonCode].isDown);
+		mouse.buttons[buttonCode].wasDown = 0;
+		mouse.buttons[buttonCode].isDown = 0;
+		return hit;
 	}
 
 	void Input::processMouseInput(WPARAM wParam, LPARAM lParam)

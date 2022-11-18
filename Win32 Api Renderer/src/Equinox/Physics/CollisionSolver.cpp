@@ -4,6 +4,11 @@ namespace eq
 {
 	namespace Physics
 	{
+		void CollisionSolver::resolveStatic(Manifold m)
+		{
+			m.bodyA->setPosition(m.bodyA->getPosition() - m.normal * m.penetration * m.bodyA->getInvMass());
+			m.bodyB->setPosition(m.bodyB->getPosition() - m.normal * m.penetration * m.bodyB->getInvMass());
+		}
 		void CollisionSolver::resolveDynamic(Manifold m)
 		{
 			Shape* bodyA = m.bodyA;

@@ -10,11 +10,13 @@ namespace eq
 			Math::Matrix2x2 transform = getScale() * Math::Matrix2x2(getAngle());
 			float ac = Math::TWO_PI / sides;
 			float maxAngle = sides <= 6 ? Math::TWO_PI : Math::TWO_PI - ac;
-			for (float i = 0; i < maxAngle; i += ac)
+			int count = 0;
+			for (float i = 0; i < maxAngle && count < sides; i += ac)
 			{
 				Math::Vector2 originalPoint(cos(i), sin(i));
 				original.push_back(originalPoint);
 				transformed.push_back(transform * originalPoint + getPosition());
+				count++;
 			}
 			calculateUnits();
 		}

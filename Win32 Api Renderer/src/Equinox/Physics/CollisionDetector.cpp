@@ -431,8 +431,6 @@ namespace eq
 				m.normal = normal.normalize();
 				m.contact = getContactBoxBox(bodyA, bodyB);
 				m.colliding = true;
-				OutputDebugString(L"test\n");
-
 			}
 
 

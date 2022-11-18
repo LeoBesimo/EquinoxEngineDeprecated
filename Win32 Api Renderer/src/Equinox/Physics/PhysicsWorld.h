@@ -16,10 +16,17 @@ namespace eq
 			CollisionDetector detector;
 			CollisionSolver solver;
 
+			Math::Vector2 worldSize;
+			float worldBorder;
+
 			Math::Vector2 GRAVITY;
 
 		public:
-			PhysicsWorld() {}
+			PhysicsWorld(Math::Vector2 worldSize) :
+				worldSize(worldSize)
+			{
+				worldBorder = 150;
+			}
 
 			void addBody(Shape* body)
 			{
@@ -62,6 +69,10 @@ namespace eq
 
 			void update(float delta);
 			void render();
+
+		private:
+			bool inWorld(Shape* shape);
+			void removeBody(unsigned int index);
 		};
 	}
 }

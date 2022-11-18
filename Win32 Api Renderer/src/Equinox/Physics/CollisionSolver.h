@@ -11,6 +11,7 @@ namespace eq
 		public:
 			CollisionSolver() {};
 			
+			void resolveStatic(Manifold m);
 			void resolveDynamic(Manifold m);
 			void resolveDynamicWithFriction(Manifold m);
 		};

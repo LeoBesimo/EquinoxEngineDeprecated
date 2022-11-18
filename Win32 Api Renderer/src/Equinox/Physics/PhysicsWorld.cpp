@@ -10,7 +10,7 @@ namespace eq
 			box->setVelocity(velocity);
 			box->setOmega(omega);
 			box->setGravity(GRAVITY);
-			box->setGravity(gravity);
+			if(!Math::nearlyEqual(gravity, Math::Vector2())) box->setGravity(gravity);
 			box->setColor(color);
 			bodies.push_back(box);
 			return box;
@@ -22,7 +22,7 @@ namespace eq
 			circle->setVelocity(velocity);
 			circle->setOmega(omega);
 			circle->setGravity(GRAVITY);
-			circle->setGravity(gravity);
+			if (!Math::nearlyEqual(gravity, Math::Vector2())) circle->setGravity(gravity);
 			circle->setColor(color);
 			bodies.push_back(circle);
 			return circle;
@@ -34,7 +34,7 @@ namespace eq
 			polygon->setVelocity(velocity);
 			polygon->setOmega(omega);
 			polygon->setGravity(GRAVITY);
-			polygon->setGravity(gravity);
+			if (!Math::nearlyEqual(gravity, Math::Vector2())) polygon->setGravity(gravity);
 			polygon->setColor(color);
 			bodies.push_back(polygon);
 			return polygon;
@@ -51,9 +51,15 @@ namespace eq
 
 		void PhysicsWorld::update(float delta)
 		{
+			for (int i = bodies.size() - 1; i >= 0; i--)
+			{
+				if (!inWorld(bodies[i])) removeBody(i);
+			}
+
 			for (unsigned int i = 0; i < bodies.size(); i++)
 			{
 				Shape* body = bodies[i];
+
 				body->update(delta);
 
 				for (unsigned int j = i + 1; j < bodies.size(); j++)
@@ -63,6 +69,7 @@ namespace eq
 					if (manifold.colliding)
 					{
 						solver.resolveDynamic(manifold);
+						//solver.resolveStatic(manifold);
 					}
 				}
 			}
@@ -74,6 +81,24 @@ namespace eq
 			{
 				body->render();
 			}
+		}
+
+		bool PhysicsWorld::inWorld(Shape* shape)
+		{
+			Math::Vector2 position = shape->getPosition();
+
+			return !(position.x <= -worldBorder 
+				|| position.x >= worldSize.x + worldBorder 
+				|| position.y <= -worldBorder 
+				|| position.y >= worldSize.y + worldBorder);
+		}
+
+		void PhysicsWorld::removeBody(unsigned int index)
+		{
+			if (index >= bodies.size()) return;
+			delete bodies[index];
+			bodies[index] = nullptr;
+			bodies.erase(bodies.begin() + index);
 		}
 	}
 }

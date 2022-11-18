@@ -19,7 +19,7 @@ namespace eq
 		namespace Materials
 		{
 			static const Material SUPERBALL(1, 1, 0, 0);
-			static const Material STATIC(0, 0, 0, 0);
+			static const Material STATIC(0, 1, 0, 0);
 		}
 
 	}

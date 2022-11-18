@@ -4,7 +4,7 @@ equinoxAppEntryPoint
 {
 	eq::Game::setWindowProperties(L"Test Window", 1000,800);
 
-	eq::Physics::PhysicsWorld world;
+	eq::Physics::PhysicsWorld world(eq::Math::Vector2(eq::Game::getWindowWidth(), eq::Game::getWindowHeight()));
 
 	eq::Physics::BoxShape* shape = world.addBox(eq::Math::Vector2(400, 400), 0.f, eq::Physics::Materials::SUPERBALL, eq::Math::Vector2(20, 20));
 	shape -> setColor(eq::Color(255, 0, 0));
@@ -16,12 +16,18 @@ equinoxAppEntryPoint
 
 	eq::Physics::PolygonShape* poly = world.addPolygon(eq::Math::Vector2(600, 600), 0.f, 7, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(40, 0, 0, 40));
 	eq::Physics::PolygonShape* poly2 = world.addPolygon(eq::Math::Vector2(700, 600), 0.f, 3, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(40, 0, 0, 40));
-	poly2->setVelocity(eq::Math::Vector2(-20, 0));
+	//poly2->setVelocity(eq::Math::Vector2(-20, 0));
 	poly->setOmega(-eq::Math::QUARTER_PI);
 
 	eq::Physics::CircleShape* circle = world.addCircle(eq::Math::Vector2(400, 200), 0.f, 30, eq::Physics::Materials::SUPERBALL);
-	circle->setVelocity(eq::Math::Vector2(80, 0));
+	//circle->setVelocity(eq::Math::Vector2(80, 0));
 	circle->setOmega(eq::Math::PI);
+
+	eq::Physics::BoxShape* floor = world.addBox(eq::Math::Vector2(500, 800), 0.f, eq::Physics::Materials::STATIC, eq::Math::Vector2(800, 50));
+	eq::Physics::PolygonShape* polygon = new eq::Physics::PolygonShape(eq::Math::Vector2(300, 300), 0.f, 6, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(30, 0, 0, 30));
+	polygon->setColor(eq::Color(255, 0, 0));
+
+	world.addBody(polygon);
 
 	eq::Game::setGameUpdate([&](float delta)
 	{
@@ -33,6 +39,7 @@ equinoxAppEntryPoint
 		eq::Input::getMousePosition(&mouse);
 
 		if (eq::Input::wasKeyHit(EQ_SPACE)) world.setWorldGravity(eq::Math::Vector2(0, 100));
+		if (eq::Input::wasKeyHit(EQ_W)) world.addPolygon(mouse, 0.f, 6, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(30, 0, 0, 30));
 
 		world.update(delta);
 		world.render();
