@@ -9,15 +9,16 @@ equinoxAppEntryPoint
 	eq::Physics::BoxShape* shape = world.addBox(eq::Math::Vector2(400, 400), 0.f, eq::Physics::Materials::SUPERBALL, eq::Math::Vector2(20, 20));
 	shape -> setColor(eq::Color(255, 0, 0));
 
-	eq::Physics::PolygonShape* poly3 = world.addPolygon(eq::Math::Vector2(400, 200), 0.f, 5, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(20,0,0,20));
+	eq::Physics::PolygonShape* poly3 = world.addPolygon(eq::Math::Vector2(400, 200), 0.f, 5, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(30,0,0,30));
 
 	eq::Physics::BoxShape* box = world.addBox(eq::Math::Vector2(400, 600), 0.f, eq::Physics::Materials::SUPERBALL, eq::Math::Vector2(30, 20));
-	box->setVelocity(eq::Math::Vector2(0, -50));
+	//box->setVelocity(eq::Math::Vector2(0, -50));
+	box->setOmega(eq::Math::QUARTER_PI);
 
 	eq::Physics::PolygonShape* poly = world.addPolygon(eq::Math::Vector2(600, 600), 0.f, 7, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(40, 0, 0, 40));
 	eq::Physics::PolygonShape* poly2 = world.addPolygon(eq::Math::Vector2(700, 600), 0.f, 3, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(40, 0, 0, 40));
 	//poly2->setVelocity(eq::Math::Vector2(-20, 0));
-	poly->setOmega(-eq::Math::QUARTER_PI);
+	poly->setOmega(eq::Math::QUARTER_PI);
 
 	eq::Physics::CircleShape* circle = world.addCircle(eq::Math::Vector2(400, 200), 0.f, 30, eq::Physics::Materials::SUPERBALL);
 	//circle->setVelocity(eq::Math::Vector2(80, 0));

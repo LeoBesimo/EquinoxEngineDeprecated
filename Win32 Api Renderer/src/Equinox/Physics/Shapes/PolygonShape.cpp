@@ -41,9 +41,10 @@ namespace eq
 
 		void PolygonShape::transformPoints()
 		{
+			Math::Matrix2x2 rotation = Math::Matrix2x2(getAngle());
 			for (unsigned int i = 0; i < original.size(); i++)
 			{
-				Math::Matrix2x2 transform = getScale() * Math::Matrix2x2(getAngle());
+				Math::Matrix2x2 transform = rotation * getScale();
 				transformed[i] = transform * original[i] + getPosition();
 			}
 		}
