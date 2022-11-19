@@ -29,6 +29,9 @@ namespace eq
 			std::vector<Math::Vector2> getNormals(std::vector<Math::Vector2> corners);
 
 			Math::Vector2 getMinMax(std::vector<Math::Vector2> points, Math::Vector2 normal);
+			Math::Vector2 getMinMaxCircle(Math::Vector2 center, float radius, Math::Vector2 normal);
+
+			Math::Vector2 getClosestPoint(Math::Vector2 center, std::vector<Math::Vector2> points);
 
 			Manifold CircleCircleCollision(CircleShape* bodyA, CircleShape* bodyB);
 			Manifold PolygonPolygonCollision(PolygonShape* bodyA, PolygonShape* bodyB);

@@ -239,6 +239,62 @@ namespace eq
 			return contact;
 		}
 
+		Math::Vector2 CollisionDetector::getContactCircleBox(CircleShape* bodyA, BoxShape* bodyB)
+		{
+			std::vector<Math::Vector2> corners = bodyB->getCorners();
+			Math::Vector2 pCenter = bodyB->getPosition();
+			Math::Vector2 cCenter = bodyA->getPosition();
+			float radius = bodyA->getRadius();
+			Math::Vector2 cp;
+
+			float minDistSqr = FLT_MAX;
+
+			for (unsigned int i = 0; i < corners.size(); i++)
+			{
+				int j = (i + 1) % corners.size();
+				Math::Vector2 va = corners[i];
+				Math::Vector2 vb = corners[j];
+
+				Math::Vector2 contact;
+				float distSqr = Math::distPointToLine(cCenter, va, vb, &contact);
+				if (distSqr < minDistSqr)
+				{
+					cp = contact;
+					minDistSqr = distSqr;
+				}
+			}
+
+			return cp;
+		}
+
+		Math::Vector2 CollisionDetector::getcontactCirclePolygon(CircleShape* bodyA, PolygonShape* bodyB)
+		{
+			std::vector<Math::Vector2> corners = bodyB->getCorners();
+			Math::Vector2 pCenter = bodyB->getPosition();
+			Math::Vector2 cCenter = bodyA->getPosition();
+			float radius = bodyA->getRadius();
+			Math::Vector2 cp;
+			
+			float minDistSqr = FLT_MAX;
+
+			for (unsigned int i = 0; i < corners.size(); i++)
+			{
+				int j = (i + 1) % corners.size();
+				Math::Vector2 va = corners[i];
+				Math::Vector2 vb = corners[j];
+
+				Math::Vector2 contact;
+				float distSqr = Math::distPointToLine(cCenter, va, vb, &contact);
+				if(distSqr < minDistSqr)
+				{
+					cp = contact;
+					minDistSqr = distSqr;
+				}
+			}
+
+			return cp;
+		}
+
 		std::vector<Math::Vector2> CollisionDetector::getNormals(std::vector<Math::Vector2> corners)
 		{
 			std::vector<Math::Vector2> normals(corners.size());
@@ -271,6 +327,46 @@ namespace eq
 				}
 			}
 			return Math::Vector2(minProj, maxProj);
+		}
+
+		Math::Vector2 CollisionDetector::getMinMaxCircle(Math::Vector2 center, float radius, Math::Vector2 normal)
+		{
+			Math::Vector2 direction = normal;
+			direction.normalize();
+			direction *= radius;
+
+			Math::Vector2 p1 = center + direction;
+			Math::Vector2 p2 = center - direction;
+
+			float min = Math::dot(normal, p1);
+			float max = Math::dot(normal, p2);
+
+			if (min > max)
+			{
+				float t = min;
+				min = max;
+				max = t;
+			}
+
+			return Math::Vector2(min, max);
+		}
+
+		Math::Vector2 CollisionDetector::getClosestPoint(Math::Vector2 center, std::vector<Math::Vector2> points)
+		{
+			float minDistance = FLT_MAX;
+			Math::Vector2 closest;
+			Math::Vector2 cp;
+			for (unsigned int i = 0; i < points.size(); i++)
+			{
+				float dist = Math::distPointToLine(center, points[i], points[(i + 1) % points.size()],&cp);
+				if (dist < minDistance)
+				{
+					minDistance = dist;
+					closest = cp;
+				}
+			}
+
+			return closest;
 		}
 
 		Manifold CollisionDetector::CircleCircleCollision(CircleShape* bodyA, CircleShape* bodyB)
@@ -314,13 +410,13 @@ namespace eq
 
 			for (unsigned int i = 0; i < normalsPoly1.size(); i++)
 			{
-				Math::Vector2 projectionPoly1 = getMinMax(bodyA->getCorners(), normalsPoly1[i]);
-				Math::Vector2 projectionPoly2 = getMinMax(bodyB->getCorners(), normalsPoly1[i]);
+				Math::Vector2 projectionA = getMinMax(bodyA->getCorners(), normalsPoly1[i]);
+				Math::Vector2 projectionB = getMinMax(bodyB->getCorners(), normalsPoly1[i]);
 
-				separated = projectionPoly1.x >= projectionPoly2.y || projectionPoly2.x >= projectionPoly1.y;
+				separated = projectionA.x >= projectionB.y || projectionB.x >= projectionA.y;
 				if (separated) break;
 
-				float depth = min(projectionPoly2.y - projectionPoly1.x, projectionPoly1.y - projectionPoly2.x);
+				float depth = min(projectionB.y - projectionA.x, projectionA.y - projectionB.x);
 
 				if (depth < minDepth)
 				{
@@ -333,14 +429,14 @@ namespace eq
 			{
 				for (unsigned int i = 0; i < normalsPoly2.size(); i++)
 				{
-					Math::Vector2 projectionPoly1 = getMinMax(bodyA->getCorners(), normalsPoly2[i]);
-					Math::Vector2 projectionPoly2 = getMinMax(bodyB->getCorners(), normalsPoly2[i]);
+					Math::Vector2 projectionA = getMinMax(bodyA->getCorners(), normalsPoly2[i]);
+					Math::Vector2 projectionB = getMinMax(bodyB->getCorners(), normalsPoly2[i]);
 
 
-					separated = projectionPoly1.x >= projectionPoly2.y || projectionPoly2.x >= projectionPoly1.y;
+					separated = projectionA.x >= projectionB.y || projectionB.x >= projectionA.y;
 					if (separated) break;
 
-					float depth = min(projectionPoly2.y - projectionPoly1.x, projectionPoly1.y - projectionPoly2.x);
+					float depth = min(projectionB.y - projectionA.x, projectionA.y - projectionB.x);
 
 					if (depth < minDepth)
 					{
@@ -383,13 +479,13 @@ namespace eq
 
 			for (unsigned int i = 0; i < normalsPoly1.size(); i++)
 			{
-				Math::Vector2 projectionPoly1 = getMinMax(bodyA->getCorners(), normalsPoly1[i]);
-				Math::Vector2 projectionPoly2 = getMinMax(bodyB->getCorners(), normalsPoly1[i]);
+				Math::Vector2 projectionA = getMinMax(bodyA->getCorners(), normalsPoly1[i]);
+				Math::Vector2 projectionB = getMinMax(bodyB->getCorners(), normalsPoly1[i]);
 
-				separated = projectionPoly1.x >= projectionPoly2.y || projectionPoly2.x >= projectionPoly1.y;
+				separated = projectionA.x >= projectionB.y || projectionB.x >= projectionA.y;
 				if (separated) break;
 
-				float depth = min(projectionPoly2.y - projectionPoly1.x, projectionPoly1.y - projectionPoly2.x);
+				float depth = min(projectionB.y - projectionA.x, projectionA.y - projectionB.x);
 
 				if (depth < minDepth)
 				{
@@ -402,14 +498,14 @@ namespace eq
 			{
 				for (unsigned int i = 0; i < normalsPoly2.size(); i++)
 				{
-					Math::Vector2 projectionPoly1 = getMinMax(bodyA->getCorners(), normalsPoly2[i]);
-					Math::Vector2 projectionPoly2 = getMinMax(bodyB->getCorners(), normalsPoly2[i]);
+					Math::Vector2 projectionA = getMinMax(bodyA->getCorners(), normalsPoly2[i]);
+					Math::Vector2 projectionB = getMinMax(bodyB->getCorners(), normalsPoly2[i]);
 
 
-					separated = projectionPoly1.x >= projectionPoly2.y || projectionPoly2.x >= projectionPoly1.y;
+					separated = projectionA.x >= projectionB.y || projectionB.x >= projectionA.y;
 					if (separated) break;
 
-					float depth = min(projectionPoly2.y - projectionPoly1.x, projectionPoly1.y - projectionPoly2.x);
+					float depth = min(projectionB.y - projectionA.x, projectionA.y - projectionB.x);
 
 					if (depth < minDepth)
 					{
@@ -439,12 +535,133 @@ namespace eq
 
 		Manifold CollisionDetector::CircleBoxCollison(CircleShape* bodyA, BoxShape* bodyB)
 		{
-			return Manifold();
+			Manifold m;
+
+			m.bodyA = bodyA;
+			m.bodyB = bodyB;
+
+			std::vector<Math::Vector2> normalsPoly = getNormals(bodyB->getCorners());
+
+			bool separated = false;
+
+			Math::Vector2 normal;
+			float minDepth = FLT_MAX;
+
+			for (unsigned int i = 0; i < normalsPoly.size(); i++)
+			{
+				Math::Vector2 projectionA = getMinMaxCircle(bodyA->getPosition(), bodyA->getRadius(), normalsPoly[i]);
+				Math::Vector2 projectionB = getMinMax(bodyB->getCorners(), normalsPoly[i]);
+
+				separated = projectionA.x >= projectionB.y || projectionB.x >= projectionA.y;
+				if (separated) break;
+
+				float depth = min(projectionB.y - projectionA.x, projectionA.y - projectionB.x);
+
+				if (depth < minDepth)
+				{
+					minDepth = depth;
+					normal = normalsPoly[i];
+				}
+			}
+
+			Math::Vector2 closestPoint = getClosestPoint(bodyA->getPosition(), bodyB->getCorners());
+			Math::Vector2 axis = closestPoint - bodyA->getPosition();
+
+			Math::Vector2 projectionA = getMinMaxCircle(bodyA->getPosition(), bodyA->getRadius(), axis);
+			Math::Vector2 projectionB = getMinMax(bodyB->getCorners(), axis);
+
+			separated = (projectionA.x >= projectionB.y || projectionB.x >= projectionA.y);
+
+			if (separated)
+			{
+				m.colliding = false;
+				return m;
+			}
+
+			float depth = min(projectionB.y - projectionA.x, projectionA.y - projectionB.x);
+
+			if (depth < minDepth)
+			{
+				minDepth = depth;
+				normal = axis;
+			}
+
+			m.colliding = !separated;
+			if (!separated)
+			{
+				Math::Vector2 ab = bodyB->getPosition() - bodyA->getPosition();
+
+				if (Math::dot(ab, normal) < 0) normal *= -1;
+
+				m.penetration = minDepth / normal.len();
+				m.normal = normal.normalize();
+				m.contact = getContactCircleBox(bodyA, bodyB);
+				//OutputDebugString(L"Colliding");
+			}
+
+			return m;
 		}
 
 		Manifold CollisionDetector::CirclePolygonCollison(CircleShape* bodyA, PolygonShape* bodyB)
 		{
-			return Manifold();
+			Manifold m;
+
+			m.bodyA = bodyA;
+			m.bodyB = bodyB;
+
+			std::vector<Math::Vector2> normalsPoly = getNormals(bodyB->getCorners());
+
+			bool separated = false;
+
+			Math::Vector2 normal;
+			float minDepth = FLT_MAX;
+
+			for (unsigned int i = 0; i < normalsPoly.size(); i++)
+			{
+				Math::Vector2 projectionA = getMinMaxCircle(bodyA->getPosition(), bodyA->getRadius(), normalsPoly[i]);
+				Math::Vector2 projectionB = getMinMax(bodyB->getCorners(), normalsPoly[i]);
+
+				separated = projectionA.x >= projectionB.y || projectionB.x >= projectionA.y;
+				if (separated) break;
+
+				float depth = min(projectionB.y - projectionA.x, projectionA.y - projectionB.x);
+
+				if (depth < minDepth)
+				{
+					minDepth = depth;
+					normal = normalsPoly[i];
+				}
+			}
+
+			Math::Vector2 closestPoint = getClosestPoint(bodyA->getPosition(), bodyB->getCorners());
+			Math::Vector2 axis = closestPoint - bodyA->getPosition();
+
+			Math::Vector2 projectionA = getMinMaxCircle(bodyA->getPosition(), bodyA->getRadius(), axis);
+			Math::Vector2 projectionB = getMinMax(bodyB->getCorners(), axis);
+
+			separated = projectionA.x >= projectionB.y || projectionB.x >= projectionA.y;
+
+			float depth = min(projectionB.y - projectionA.x, projectionA.y - projectionB.x);
+
+			if (depth < minDepth)
+			{
+				minDepth = depth;
+				normal = axis;
+			}
+
+			m.colliding = !separated;
+			if (!separated)
+			{
+				Math::Vector2 ab = bodyB->getPosition() - bodyA->getPosition();
+
+				if (Math::dot(ab, normal) < 0) normal *= -1;
+
+				m.penetration = minDepth / normal.len();
+				m.normal = normal.normalize();
+				m.contact = getcontactCirclePolygon(bodyA, bodyB);
+			}
+
+			return m;
 		}
 
 		Manifold CollisionDetector::BoxPolygonCollision(BoxShape* bodyA, PolygonShape* bodyB)
@@ -464,13 +681,13 @@ namespace eq
 
 			for (unsigned int i = 0; i < normalsPoly1.size(); i++)
 			{
-				Math::Vector2 projectionPoly1 = getMinMax(bodyA->getCorners(), normalsPoly1[i]);
-				Math::Vector2 projectionPoly2 = getMinMax(bodyB->getCorners(), normalsPoly1[i]);
+				Math::Vector2 projectionA = getMinMax(bodyA->getCorners(), normalsPoly1[i]);
+				Math::Vector2 projectionB = getMinMax(bodyB->getCorners(), normalsPoly1[i]);
 
-				separated = projectionPoly1.x >= projectionPoly2.y || projectionPoly2.x >= projectionPoly1.y;
+				separated = projectionA.x >= projectionB.y || projectionB.x >= projectionA.y;
 				if (separated) break;
 
-				float depth = min(projectionPoly2.y - projectionPoly1.x, projectionPoly1.y - projectionPoly2.x);
+				float depth = min(projectionB.y - projectionA.x, projectionA.y - projectionB.x);
 
 				if (depth < minDepth)
 				{
@@ -483,14 +700,14 @@ namespace eq
 			{
 				for (unsigned int i = 0; i < normalsPoly2.size(); i++)
 				{
-					Math::Vector2 projectionPoly1 = getMinMax(bodyA->getCorners(), normalsPoly2[i]);
-					Math::Vector2 projectionPoly2 = getMinMax(bodyB->getCorners(), normalsPoly2[i]);
+					Math::Vector2 projectionA = getMinMax(bodyA->getCorners(), normalsPoly2[i]);
+					Math::Vector2 projectionB = getMinMax(bodyB->getCorners(), normalsPoly2[i]);
 
 
-					separated = projectionPoly1.x >= projectionPoly2.y || projectionPoly2.x >= projectionPoly1.y;
+					separated = projectionA.x >= projectionB.y || projectionB.x >= projectionA.y;
 					if (separated) break;
 
-					float depth = min(projectionPoly2.y - projectionPoly1.x, projectionPoly1.y - projectionPoly2.x);
+					float depth = min(projectionB.y - projectionA.x, projectionA.y - projectionB.x);
 
 					if (depth < minDepth)
 					{

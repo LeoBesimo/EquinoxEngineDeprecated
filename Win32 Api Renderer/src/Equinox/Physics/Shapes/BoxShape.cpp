@@ -44,11 +44,12 @@ namespace eq
 			transformed[1] = transform * original[1] + getPosition();
 			transformed[2] = transform * original[2] + getPosition();
 			transformed[3] = transform * original[3] + getPosition();
+		}
 
-			wchar_t charBuffer[128];
-			swprintf(charBuffer, 128, L"%f, %f \n%f, %f \n\n", transform.a.x, transform.b.x, transform.a.y, transform.b.y);
-			OutputDebugString(charBuffer);
-			//eq::Renderer::WriteText(charBuffer, 50, 50, eq::Color(255, 0, 255));
+		void BoxShape::move(Math::Vector2 distance)
+		{
+			Shape::move(distance);
+			transformPoints();
 		}
 
 		void BoxShape::applyGravity()

@@ -46,7 +46,8 @@ namespace eq
 			virtual void update(float delta);
 			virtual void render() = 0;
 
-			void applyForce(Math::Vector2 force, Math::Vector2 radius = Math::Vector2());
+			void applyForce(Math::Vector2 force);
+			void applyForce(Math::Vector2 force, Math::Vector2 radius);
 
 		public:
 			//Get
@@ -94,6 +95,8 @@ namespace eq
 			void setColor(Color color) { this->color = color; }
 
 			void setStatic();
+
+			virtual void move(Math::Vector2 distance);
 
 		private:
 			virtual void applyGravity() = 0;

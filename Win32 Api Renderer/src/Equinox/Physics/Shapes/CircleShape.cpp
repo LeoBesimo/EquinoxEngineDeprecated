@@ -12,6 +12,9 @@ namespace eq
 
 		void CircleShape::update(float delta)
 		{
+			/*wchar_t buffer[32];
+			swprintf(buffer, 32, L"%f : %f\n", getAngle(), getOmega());
+			OutputDebugString(buffer);*/
 			applyGravity();
 			Shape::update(delta);
 		}
@@ -26,7 +29,7 @@ namespace eq
 
 		void CircleShape::applyGravity()
 		{
-			applyForce(getGravit() * getMass());
+			setForce(getForce() + (getGravit() * getMass()));
 		}
 
 		void CircleShape::calculateUnits()

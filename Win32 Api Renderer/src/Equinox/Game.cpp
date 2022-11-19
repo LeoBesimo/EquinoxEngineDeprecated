@@ -185,6 +185,8 @@ namespace eq
 
 				Renderer::copyBufferToWindow(deviceContext, width, height);
 
+				ValidateRect(windowHandle, NULL);
+
 				ReleaseDC(windowHandle, deviceContext);
 				
 			}

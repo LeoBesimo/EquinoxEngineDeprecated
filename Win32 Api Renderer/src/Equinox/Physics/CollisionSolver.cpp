@@ -6,8 +6,10 @@ namespace eq
 	{
 		void CollisionSolver::resolveStatic(Manifold m)
 		{
-			m.bodyA->setPosition(m.bodyA->getPosition() - m.normal * m.penetration * m.bodyA->getInvMass());
-			m.bodyB->setPosition(m.bodyB->getPosition() - m.normal * m.penetration * m.bodyB->getInvMass());
+			m.bodyA->move(-m.normal * m.penetration / 2);
+			m.bodyB->move(m.normal * m.penetration / 2);
+			//m.bodyA->setPosition(m.bodyA->getPosition() - m.normal * m.penetration * m.bodyA->getInvMass());
+			//m.bodyB->setPosition(m.bodyB->getPosition() + m.normal * m.penetration * m.bodyB->getInvMass());
 		}
 		void CollisionSolver::resolveDynamic(Manifold m)
 		{
@@ -106,8 +108,8 @@ namespace eq
 
 			Math::Vector2 frictionImpulse = tangent * jt;
 
-			float sf = sqrt(bodyA->getMaterial().staticFriction * bodyB->getMaterial().staticFriction);
-			float df = sqrt(bodyA->getMaterial().dynamicFriction * bodyB->getMaterial().dynamicFriction);
+			float sf = (bodyA->getMaterial().staticFriction + bodyB->getMaterial().staticFriction) / 2;//sqrt(bodyA->getMaterial().staticFriction * bodyB->getMaterial().staticFriction);
+			float df = (bodyA->getMaterial().dynamicFriction + bodyB->getMaterial().dynamicFriction) / 2;//sqrt(bodyA->getMaterial().dynamicFriction * bodyB->getMaterial().dynamicFriction);
 
 			if (abs(jt) < j * sf)
 				frictionImpulse = tangent * jt;

@@ -19,16 +19,14 @@ namespace eq
 			integrateVelocities(delta);
 		}
 
+		void Shape::applyForce(Math::Vector2 force)
+		{
+			this->force += force;
+		}
+
 		void Shape::applyForce(Math::Vector2 force, Math::Vector2 radius)
 		{
-			if (radius.x == 0 && radius.y == 0)
-			{
-				this->force += force;
-			}
-			else
-			{
 				torque += Math::cross(force, radius);
-			}
 		}
 
 		void Shape::setMass(float mass)
@@ -49,12 +47,18 @@ namespace eq
 			setInertia(0);
 		}
 
+		void Shape::move(Math::Vector2 distance)
+		{
+			if (invMass == 0) return;
+			this->position += distance;
+		}
+
 		void Shape::integrateForces(float delta)
 		{
 			velocity += force * invMass * delta;
-			omega += torque * invInertia * delta;
+			omega += (torque * invInertia * delta);
 			force *= 0;
-			torque *= 0;
+			torque = 0;
 		}
 
 		void Shape::integrateVelocities(float delta)

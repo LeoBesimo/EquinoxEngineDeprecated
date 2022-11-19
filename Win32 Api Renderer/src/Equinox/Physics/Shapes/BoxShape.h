@@ -21,6 +21,8 @@ namespace eq
 
 		public:
 			std::vector<Math::Vector2> getCorners() { return transformed; };
+			
+			void move(Math::Vector2 distance);
 
 		private:
 			void applyGravity();

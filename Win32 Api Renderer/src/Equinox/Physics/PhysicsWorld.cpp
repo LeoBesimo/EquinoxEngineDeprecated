@@ -62,14 +62,16 @@ namespace eq
 
 				body->update(delta);
 
-				for (unsigned int j = i + 1; j < bodies.size(); j++)
+				for (unsigned int j = 0; j < bodies.size(); j++)
 				{
+					if (i == j) continue;
+
 					Shape* colliderBody = bodies[j];
 					Manifold manifold = detector.detectCollision(body, colliderBody);
 					if (manifold.colliding)
 					{
-						solver.resolveDynamic(manifold);
-						//solver.resolveStatic(manifold);
+						solver.resolveDynamicWithFriction(manifold);
+						solver.resolveStatic(manifold);
 					}
 				}
 			}

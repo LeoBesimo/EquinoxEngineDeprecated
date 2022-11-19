@@ -49,6 +49,12 @@ namespace eq
 			}
 		}
 
+		void PolygonShape::move(Math::Vector2 distance)
+		{
+			Shape::move(distance);
+			transformPoints();
+		}
+
 		void PolygonShape::applyGravity()
 		{
 			applyForce(getGravit() * getMass());
@@ -79,15 +85,16 @@ namespace eq
 
 				Math::Vector2 midpoint;
 				float heightSqr = Math::distPointToLine(center, p1, p2, &midpoint);
+				float height = sqrt(heightSqr);
 
 				Math::Vector2 triangleCenter1 = (center + p1 + midpoint) / 3;
 				Math::Vector2 triangleCenter2 = (center + p2 + midpoint) / 3;
 
-				float b1 = Math::pythagoreanSolve(p1, midpoint);
-				float b2 = Math::pythagoreanSolve(p2, midpoint);
+				float b1 = (p1 - midpoint).len();
+				float b2 = (p2 - midpoint).len();
 
-				float area1 = sqrt(heightSqr + b1) / 2;
-				float area2 = sqrt(heightSqr + b2) / 2;
+				float area1 = height * b1 / 2;
+				float area2 = height * b2 / 2;
 
 				float mass1 = area1 * material.density;
 				float mass2 = area2 * material.density;
@@ -98,8 +105,8 @@ namespace eq
 				totalMass += mass1;
 				totalMass += mass2;
 
-				totalInertia += j1 * Math::pythagoreanSolve(center, triangleCenter1);
-				totalInertia += j2 * Math::pythagoreanSolve(center, triangleCenter2);
+				totalInertia += j1 * (triangleCenter1 - center).len();//Math::pythagoreanSolve(center, triangleCenter1);
+				totalInertia += j2 * (triangleCenter2 - center).len();//Math::pythagoreanSolve(center, triangleCenter2);
 			}
 
 			setMass(totalMass);
