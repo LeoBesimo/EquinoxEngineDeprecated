@@ -51,6 +51,9 @@ namespace eq
 
 		void PhysicsWorld::update(float delta)
 		{
+
+			Manifold manifold;
+
 			for (int i = bodies.size() - 1; i >= 0; i--)
 			{
 				if (!inWorld(bodies[i])) removeBody(i);
@@ -62,12 +65,12 @@ namespace eq
 
 				body->update(delta);
 
-				for (unsigned int j = 0; j < bodies.size(); j++)
+				for (unsigned int j = i + 1; j < bodies.size(); j++)
 				{
 					if (i == j) continue;
 
 					Shape* colliderBody = bodies[j];
-					Manifold manifold = detector.detectCollision(body, colliderBody);
+					manifold = detector.detectCollision(body, colliderBody);
 					if (manifold.colliding)
 					{
 						solver.resolveDynamicWithFriction(manifold);

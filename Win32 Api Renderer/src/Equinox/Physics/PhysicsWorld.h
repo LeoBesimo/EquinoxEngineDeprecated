@@ -67,6 +67,8 @@ namespace eq
 
 			void setWorldGravity(Math::Vector2 gravity);
 
+			std::vector<Shape*> getBodies() { return bodies; }
+
 			void update(float delta);
 			void render();
 

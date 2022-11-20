@@ -6,8 +6,9 @@ namespace eq
 	{
 		void CollisionSolver::resolveStatic(Manifold m)
 		{
-			m.bodyA->move(-m.normal * m.penetration / 2);
-			m.bodyB->move(m.normal * m.penetration / 2);
+			Math::Vector2 normal = m.normal.normalize();
+			m.bodyA->move(-normal * m.penetration / 2);
+			m.bodyB->move(normal * m.penetration / 2);
 			//m.bodyA->setPosition(m.bodyA->getPosition() - m.normal * m.penetration * m.bodyA->getInvMass());
 			//m.bodyB->setPosition(m.bodyB->getPosition() + m.normal * m.penetration * m.bodyB->getInvMass());
 		}
