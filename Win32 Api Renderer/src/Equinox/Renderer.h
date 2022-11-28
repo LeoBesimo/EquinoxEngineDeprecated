@@ -67,9 +67,11 @@ namespace eq
 		static const int bytesPerPixel = 4;
 
 		HWND windowHandle = 0;
-		BitmapBuffer buffer;
+		BitmapBuffer buffer[2];
 		Color clearColor;
 		std::vector<Text> text;
+		bool buffer2 = false;
+		bool swappedBuffers = false;
 
 		static float alphaScaler;
 
@@ -88,8 +90,16 @@ namespace eq
 		
 		static void WriteText(const wchar_t* text, int x, int y, const Color& color);
 
+		static void swapBuffers()
+		{
+			getInstance().buffer2 = !getInstance().buffer2;
+			getInstance().swappedBuffers = true;
+		}
+
+		static bool buffersSwapped() { return getInstance().swappedBuffers; }
+
 	private:
-		Renderer() { buffer = {}; clearColor = Color(255, 255, 255, 255); alphaScaler = 1 / 255; }
+		Renderer() { buffer[0] = {}; buffer[1] = {}; clearColor = Color(255, 255, 255, 255); alphaScaler = 1 / 255; }
 		
 		Renderer(const Renderer&) = delete;
 		Renderer& operator= (const Renderer&) = delete;
@@ -103,6 +113,13 @@ namespace eq
 		}
 
 	private:
+		
+		static BitmapBuffer& getActiveBuffer() { return getInstance().buffer[getInstance().buffer2]; }
+		static BitmapBuffer& getInactiveBuffer() 
+		{ 
+			return getInstance().buffer[!getInstance().buffer2];
+		}
+
 		inline static void setWindowHandle(HWND windowHandle) { getInstance().windowHandle = windowHandle; }
 		static void getWindowDimenstions(int* outWidth, int* outHeight);
 		static void resizeFrameBuffer(int width, int height);

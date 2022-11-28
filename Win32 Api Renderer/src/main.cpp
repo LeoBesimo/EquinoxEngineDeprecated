@@ -3,7 +3,7 @@
 
 equinoxAppEntryPoint
 {
-	eq::Game::setWindowProperties(L"Test Window", 1800,1000);
+	eq::Game::setWindowProperties(L"Test Window", 900,1000);
 
 	eq::Physics::PhysicsWorld world(eq::Math::Vector2(eq::Game::getWindowWidth(), eq::Game::getWindowHeight()));
 
@@ -46,20 +46,21 @@ equinoxAppEntryPoint
 		eq::Input::getMousePosition(&mouse);
 
 		if (eq::Input::wasKeyHit(EQ_SPACE)) world.setWorldGravity(eq::Math::Vector2(0, 100));
-		if (eq::Input::isKeyPressed(EQ_W)) world.addPolygon(mouse, 0.f, 6, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(30, 0, 0, 30));
+		if (eq::Input::isKeyPressed(EQ_W)) world.addCircle(mouse, 0, 30, eq::Physics::Materials::SUPERBALL);//world.addPolygon(mouse, 0.f, 6, eq::Physics::Materials::SUPERBALL, eq::Math::Matrix2x2(30, 0, 0, 30));
 
 		world.update(delta);
 		world.render();
 
 		//wchar_t charBuffer[128];
-		swprintf(charBuffer, 128,L"Framerate: %d        Bodies : % d", int(1 / delta + 0.5f), world.getBodies().size());
+		swprintf(charBuffer, 128,L"Framerate: %d        Bodies : % d\n", int(1 / delta + 0.5f), world.getBodies().size());
 		/*std::wstringstream charBuffer;
 		charBuffer << "Framerate: " << int(1 / delta + 0.5f);*/
+		OutputDebugString(charBuffer);
 
-		eq::Renderer::WriteText(charBuffer, 10, 10, eq::Color(255,0,255));
+		//eq::Renderer::WriteText(charBuffer, 10, 10, eq::Color(255,0,255));
 
 
-		eq::Renderer::WriteText(L"Test", 200, 200, eq::Color(255,0,255));
+		//eq::Renderer::WriteText(L"Test", 200, 200, eq::Color(255,0,255));
 	}
 	);
 

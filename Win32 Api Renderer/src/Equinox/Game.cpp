@@ -88,7 +88,7 @@ namespace eq
 
 	void Game::startWindow()
 	{
-		
+
 
 		const wchar_t* className = L"Equinox Window";
 
@@ -147,49 +147,63 @@ namespace eq
 			LARGE_INTEGER lastCounter;
 			QueryPerformanceCounter(&lastCounter);
 
-			while (running)
-			{
+			std::thread renderThread([]() {
 
-				LARGE_INTEGER currentCounter;
-				float delta = 0;
-				QueryPerformanceCounter(&currentCounter);
-				while(delta < secondsPerFrame)
+				while (Game::isRunning())
 				{
-				QueryPerformanceCounter(&currentCounter);
+					HWND windowHandle = Game::getWindowHandle();
 
-				int64_t counterElapsed = currentCounter.QuadPart - lastCounter.QuadPart;
+					HDC deviceContext = GetDC(windowHandle);
 
-				delta = (float)counterElapsed / (float)cpuFrequency.QuadPart;
-				}
-				lastCounter = currentCounter;
+					int width, height;
+					Renderer::getWindowDimenstions(&width, &height);
 
-				MSG message;
-				while (PeekMessage(&message, 0, 0, 0, PM_REMOVE))
-				{
-					if (message.message == WM_QUIT)
-					
-						running = false;
-					TranslateMessage(&message);
-					DispatchMessage(&message);
+					Renderer::copyBufferToWindow(deviceContext, width, height);
+
+					ValidateRect(windowHandle, NULL);
+
+					ReleaseDC(windowHandle, deviceContext);
 
 				}
 
-				Renderer::clear();
-			
-				getInstance().update(delta);
+			});
 
-				HDC deviceContext = GetDC(windowHandle);
+				while (running)
+				{
 
-				int width, height;
-				Renderer::getWindowDimenstions(&width, &height);
+					LARGE_INTEGER currentCounter;
+					float delta = 0;
+					QueryPerformanceCounter(&currentCounter);
+					while (delta < secondsPerFrame)
+					{
+						QueryPerformanceCounter(&currentCounter);
 
-				Renderer::copyBufferToWindow(deviceContext, width, height);
+						int64_t counterElapsed = currentCounter.QuadPart - lastCounter.QuadPart;
 
-				ValidateRect(windowHandle, NULL);
+						delta = (float)counterElapsed / (float)cpuFrequency.QuadPart;
+					}
+					lastCounter = currentCounter;
 
-				ReleaseDC(windowHandle, deviceContext);
-				
-			}
+					MSG message;
+					while (PeekMessage(&message, 0, 0, 0, PM_REMOVE))
+					{
+						if (message.message == WM_QUIT)
+
+							running = false;
+						TranslateMessage(&message);
+						DispatchMessage(&message);
+
+					}
+
+					Renderer::clear();
+
+					getInstance().update(delta);
+
+					Renderer::swapBuffers();
+
+				}
+
+				renderThread.join();
 		}
 		else
 		{

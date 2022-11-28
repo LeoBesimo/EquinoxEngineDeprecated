@@ -4,6 +4,7 @@
 
 #include <string>
 #include <functional>
+#include <thread>
 
 #include "Renderer.h"
 #include "Input.h"
@@ -29,7 +30,6 @@ namespace eq
 		int windowHeight;
 
 		std::function<void(float delta)> update;
-
 		float secondsPerFrame = 1.f / 240.f;
 
 	public:
@@ -63,6 +63,8 @@ namespace eq
 		inline static std::wstring getWindowTitle() { return getInstance().windowTitle; }
 		inline static int getWindowWidth() { return getInstance().windowWidth; }
 		inline static int getWindowHeight() { return getInstance().windowHeight; }
+		inline static HWND getWindowHandle() { return getInstance().windowHandle; }
+		inline static bool isRunning() { return getInstance().running; }
 		
 	private:
 		void startWindow();

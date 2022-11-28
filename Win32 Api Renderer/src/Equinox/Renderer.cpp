@@ -7,7 +7,7 @@ namespace eq
 
 	void Renderer::SetPixel(int x, int y, const Color& color)
 	{
-		BitmapBuffer& buffer = getInstance().buffer;
+		BitmapBuffer& buffer = getActiveBuffer();
 
 		if (x < 0 || x >= buffer.width || y < 0 || y >= buffer.height)
 		{
@@ -24,7 +24,7 @@ namespace eq
 
 	void Renderer::FillRectangle(const Rect& rect, const Color& color)
 	{
-		BitmapBuffer& buffer = getInstance().buffer;
+		BitmapBuffer& buffer = getActiveBuffer();
 
 		int minX = rect.x;
 		int minY = rect.y;
@@ -54,7 +54,7 @@ namespace eq
 
 	void Renderer::DrawRectangle(const Rect& rect, const Color& color)
 	{
-		BitmapBuffer& buffer = getInstance().buffer;
+		BitmapBuffer& buffer = getActiveBuffer();
 
 		int minX = rect.x;
 		int minY = rect.y;
@@ -65,12 +65,12 @@ namespace eq
 		if (minY < 0) minY = 0;
 		if (maxX > buffer.width) maxX = buffer.width;
 		if (maxY > buffer.height) maxY = buffer.height;
-		
+
 		for (int x = minX; x <= maxX; x++) {
 			SetPixel(x, minY, color);
 			SetPixel(x, maxY, color);
 		}
-		
+
 		for (int y = minY; y <= maxY; y++) {
 			SetPixel(minX, y, color);
 			SetPixel(maxX, y, color);
@@ -97,7 +97,7 @@ namespace eq
 
 	void Renderer::DrawLine(Math::Vector2 a, Math::Vector2 b, const Color& color)
 	{
-		DrawLine(int(a.x + 0.5f), int(a.y + 0.5f), int(b.x + 0.5f), int(b.y + 0.5f) ,color);
+		DrawLine(int(a.x + 0.5f), int(a.y + 0.5f), int(b.x + 0.5f), int(b.y + 0.5f), color);
 	}
 
 	void Renderer::FillCircle(int originX, int originY, int radius, const Color& color)
@@ -160,31 +160,34 @@ namespace eq
 
 	void Renderer::resizeFrameBuffer(int width, int height)
 	{
-		BitmapBuffer& buffer = getInstance().buffer;
-		if (buffer.memory)
+		for (unsigned int i = 0; i < 2; i++)
 		{
-			VirtualFree(buffer.memory, 0, MEM_RELEASE);
+			BitmapBuffer& buffer = getInstance().buffer[i];
+			if (buffer.memory)
+			{
+				VirtualFree(buffer.memory, 0, MEM_RELEASE);
+			}
+
+			buffer.width = width;
+			buffer.height = height;
+
+			buffer.info.bmiHeader.biSize = sizeof(buffer.info.bmiHeader);
+			buffer.info.bmiHeader.biWidth = buffer.width;
+			buffer.info.bmiHeader.biHeight = -buffer.height;  //negative to invert buffer y direction
+			buffer.info.bmiHeader.biPlanes = 1;
+			buffer.info.bmiHeader.biBitCount = 32;
+			buffer.info.bmiHeader.biCompression = BI_RGB;
+
+			int bufferMemorySize = (buffer.width) * (buffer.height) * bytesPerPixel;
+			buffer.memory = VirtualAlloc(0, bufferMemorySize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+
+			buffer.pitch = buffer.width * bytesPerPixel;
 		}
-
-		buffer.width = width;
-		buffer.height = height;
-
-		buffer.info.bmiHeader.biSize = sizeof(buffer.info.bmiHeader);
-		buffer.info.bmiHeader.biWidth = buffer.width;
-		buffer.info.bmiHeader.biHeight = -buffer.height;  //negative to invert buffer y direction
-		buffer.info.bmiHeader.biPlanes = 1;
-		buffer.info.bmiHeader.biBitCount = 32;
-		buffer.info.bmiHeader.biCompression = BI_RGB;
-
-		int bufferMemorySize = (buffer.width) * (buffer.height) * bytesPerPixel;
-		buffer.memory = VirtualAlloc(0, bufferMemorySize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-		
-		buffer.pitch = buffer.width * bytesPerPixel;
 	}
 
 	void Renderer::copyBufferToWindow(HDC deviceContext, int windowWidth, int windowHeight)
 	{
-		BitmapBuffer& buffer = getInstance().buffer;
+		BitmapBuffer& buffer = getInactiveBuffer();
 
 		StretchDIBits(
 			deviceContext,
@@ -195,7 +198,6 @@ namespace eq
 			DIB_RGB_COLORS,
 			SRCCOPY
 		);
-
 		SetBkMode(deviceContext, TRANSPARENT);
 		for (Text text : getInstance().text)
 		{
@@ -203,14 +205,17 @@ namespace eq
 			TextOut(deviceContext, text.x, text.y, text.text, text.length);
 		}
 
-		getInstance().text.clear();
+		if (buffersSwapped() == true) {
+			getInstance().text.clear();
+			getInstance().swappedBuffers = false;
+		}
 	}
 
 	void Renderer::clear()
 	{
-		BitmapBuffer& buffer = getInstance().buffer;
+		BitmapBuffer& buffer = getActiveBuffer();
 
-		FillRectangle(Rect(0,0,float(buffer.width),float(buffer.height)), getInstance().clearColor);
+		FillRectangle(Rect(0, 0, float(buffer.width), float(buffer.height)), getInstance().clearColor);
 	}
 
 	void Renderer::plotLineLow(int x0, int y0, int x1, int y1, const Color& color)
@@ -301,7 +306,7 @@ namespace eq
 		uint8_t newBlue = opacity * original.blue + (1 - opacity) * (uint8_t) (background);*/
 
 		return ((uint8_t)(opacity * original.red + (1 - opacity) * (uint8_t)(background >> 16)) << 16) |
-			   ((uint8_t)(opacity * original.green + (1 - opacity) * (uint8_t)(background >> 8)) << 8) | 
-			   ((uint8_t)(opacity * original.blue + (1 - opacity) * (uint8_t)(background)));
+			((uint8_t)(opacity * original.green + (1 - opacity) * (uint8_t)(background >> 8)) << 8) |
+			((uint8_t)(opacity * original.blue + (1 - opacity) * (uint8_t)(background)));
 	}
 }
